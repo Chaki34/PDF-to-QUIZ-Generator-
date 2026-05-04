@@ -1,5 +1,3 @@
-
-````md
 # 🎯 PDF-to-QUIZ Generator ⚡
 
 > 🚀 AI-powered full-stack Spring Boot platform that converts PDFs into intelligent quizzes
@@ -47,7 +45,7 @@ cd pdf-quiz-ai
 
 # Run Spring Boot app
 mvn spring-boot:run
-````
+```
 
 ---
 
@@ -83,19 +81,19 @@ src/
 
 ## 💡 Why This Project?
 
-* Saves time in manual question creation
-* AI-based intelligent learning system
-* Perfect for education platforms
-* Scalable Spring Boot architecture
+- Saves time in manual question creation  
+- AI-based intelligent learning system  
+- Perfect for education platforms  
+- Scalable Spring Boot architecture  
 
 ---
 
 ## 📌 Future Improvements
 
-* 🔊 Voice-based quiz system
-* 🌐 Multi-language support
-* 📱 Mobile app integration
-* 📊 Advanced analytics dashboard
+- 🔊 Voice-based quiz system  
+- 🌐 Multi-language support  
+- 📱 Mobile app integration  
+- 📊 Advanced analytics dashboard  
 
 ---
 
@@ -103,14 +101,4 @@ src/
 
 Made with **Spring Boot + AI + Passion**
 
-🔥 If you like this project, don't forget to ⭐ the repo
-
-```
-
----
-
-If you want, I can also:
-✅ :contentReference[oaicite:0]{index=0}  
-✅ :contentReference[oaicite:1]{index=1}  
-✅ Or :contentReference[oaicite:2]{index=2}
-```
+⭐ If you like this project, don’t forget to star the repo
