@@ -15,7 +15,7 @@
 
 ## 🧠 Tech Stack
 
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7+-brightgreen?style=for-the-badge)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1+-brightgreen?style=for-the-badge)
 ![Spring AI](https://img.shields.io/badge/Spring%20AI-Enabled-blue?style=for-the-badge)
 ![MySQL](https://img.shields.io/badge/MySQL-Database-orange?style=for-the-badge)
 ![Thymeleaf](https://img.shields.io/badge/Thymeleaf-UI-green?style=for-the-badge)
