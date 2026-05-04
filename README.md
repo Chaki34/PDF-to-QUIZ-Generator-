@@ -1,213 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>PDF Quiz AI - README</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+````md
+# 🎯 PDF-to-QUIZ Generator ⚡
 
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+> 🚀 AI-powered full-stack Spring Boot platform that converts PDFs into intelligent quizzes
 
-<!-- Lucide Icons -->
-<script src="https://unpkg.com/lucide@latest"></script>
+---
 
-<style>
-body {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    color: white;
-    overflow-x: hidden;
-}
+## ✨ Overview
 
-.bg-glow {
-    position: fixed;
-    width: 400px;
-    height: 400px;
-    background: #4f46e5;
-    filter: blur(150px);
-    opacity: 0.4;
-    animation: move 8s infinite alternate;
-    border-radius: 50%;
-}
+📄 Upload any PDF  
+🤖 AI automatically generates quiz questions  
+📊 Track your performance  
+⚡ Fast and scalable processing engine  
 
-@keyframes move {
-    from { transform: translate(-100px, -100px); }
-    to { transform: translate(200px, 200px); }
-}
+---
 
-.container {
-    max-width: 1000px;
-    margin: auto;
-    padding: 40px;
-}
+## 🧠 Tech Stack
 
-header {
-    text-align: center;
-    padding: 60px 20px;
-}
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7+-brightgreen?style=for-the-badge)
+![Spring AI](https://img.shields.io/badge/Spring%20AI-Enabled-blue?style=for-the-badge)
+![MySQL](https://img.shields.io/badge/MySQL-Database-orange?style=for-the-badge)
+![Thymeleaf](https://img.shields.io/badge/Thymeleaf-UI-green?style=for-the-badge)
+![Frontend](https://img.shields.io/badge/HTML%2FCSS-FRONTEND-red?style=for-the-badge)
 
-h1 {
-    font-size: 42px;
-    background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+---
 
-.card {
-    background: rgba(255,255,255,0.06);
-    padding: 20px;
-    margin: 20px 0;
-    border-radius: 16px;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
-    transition: 0.3s;
-}
+## 🚀 Features
 
-.card:hover {
-    transform: translateY(-6px);
-}
+- 📄 PDF Upload System  
+- 🤖 AI-Powered Quiz Generation  
+- 📊 Score Tracking System  
+- ⚡ High-Speed Processing Engine  
+- 🧠 Smart Question Extraction  
+- 🎯 User-Friendly Interface  
 
-.badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    margin: 5px;
-    border-radius: 999px;
-    font-size: 12px;
-    background: #4f46e5;
-}
+---
 
-.row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+## ⚙️ Setup Instructions
 
-pre {
-    background: #111827;
-    padding: 15px;
-    border-radius: 10px;
-    overflow-x: auto;
-}
-
-footer {
-    text-align: center;
-    margin-top: 40px;
-    opacity: 0.7;
-}
-
-.icon {
-    width: 18px;
-    height: 18px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="bg-glow"></div>
-
-<div class="container">
-
-<header>
-    <h1>🎯 PDF-to-QUIZ Generator ⚡</h1>
-    <p>AI Powered Full Stack Spring Boot Platform</p>
-</header>
-
-<!-- OVERVIEW -->
-<div class="card">
-    <div class="row">
-        <i data-lucide="sparkles" class="icon"></i>
-        <h2>Overview</h2>
-    </div>
-
-    <p>Convert PDFs into intelligent AI-generated quizzes.</p>
-
-    <span class="badge">
-        <i data-lucide="leaf" class="icon"></i> Spring Boot
-    </span>
-
-    <span class="badge">
-        <i data-lucide="cpu" class="icon"></i> Spring AI
-    </span>
-
-    <span class="badge">
-        <i data-lucide="layers" class="icon"></i> Full Stack
-    </span>
-</div>
-
-<!-- FEATURES -->
-<div class="card">
-    <div class="row">
-        <i data-lucide="zap" class="icon"></i>
-        <h2>Features</h2>
-    </div>
-
-    <ul>
-        <li>📄 PDF Upload System</li>
-        <li>🤖 AI Quiz Generation</li>
-        <li>📊 Score Tracking</li>
-        <li>⚡ Fast Processing Engine</li>
-    </ul>
-</div>
-
-<!-- SETUP -->
-<div class="card">
-    <div class="row">
-        <i data-lucide="settings" class="icon"></i>
-        <h2>Setup</h2>
-    </div>
-
-<pre>
+```bash
+# Clone the repository
 git clone https://github.com/your-repo
+
+# Navigate to project
+cd pdf-quiz-ai
+
+# Run Spring Boot app
 mvn spring-boot:run
-</pre>
-</div>
+````
 
-<!-- FLOW -->
-<div class="card">
-    <div class="row">
-        <i data-lucide="git-branch" class="icon"></i>
-        <h2>System Flow</h2>
-    </div>
+---
 
-<pre>
-PDF Upload
-   ↓
-AI Processing
-   ↓
-Quiz Generation
-   ↓
-Practice Mode
-   ↓
-Score Result
-</pre>
-</div>
+## 🔁 System Flow
 
-<!-- TECH -->
-<div class="card">
-    <div class="row">
-        <i data-lucide="code" class="icon"></i>
-        <h2>Tech Stack</h2>
-    </div>
+```
+📄 PDF Upload
+      ↓
+🤖 AI Processing
+      ↓
+🧠 Quiz Generation
+      ↓
+🎮 Practice Mode
+      ↓
+📊 Score Result
+```
 
-<p>
-Spring Boot • Spring AI • MySQL • Thymeleaf • HTML/CSS
-</p>
-</div>
+---
 
-<footer>
-    💙 Built with Spring Boot + AI + Passion
-</footer>
+## 🏗️ Project Structure
 
-</div>
+```
+src/
+ ├── controller/
+ ├── service/
+ ├── model/
+ ├── repository/
+ ├── ai/
+ └── resources/
+```
 
-<script>
-lucide.createIcons();
-</script>
+---
 
-</body>
-</html>
+## 💡 Why This Project?
+
+* Saves time in manual question creation
+* AI-based intelligent learning system
+* Perfect for education platforms
+* Scalable Spring Boot architecture
+
+---
+
+## 📌 Future Improvements
+
+* 🔊 Voice-based quiz system
+* 🌐 Multi-language support
+* 📱 Mobile app integration
+* 📊 Advanced analytics dashboard
+
+---
+
+## ❤️ Author
+
+Made with **Spring Boot + AI + Passion**
+
+🔥 If you like this project, don't forget to ⭐ the repo
+
+```
+
+---
+
+If you want, I can also:
+✅ :contentReference[oaicite:0]{index=0}  
+✅ :contentReference[oaicite:1]{index=1}  
+✅ Or :contentReference[oaicite:2]{index=2}
+```
