@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Prophetian Analytics | India's Knowledge Hub</title>
+
+    <!-- TailwindCSS & Google Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js for 2D Analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- Three.js for 3D Visualization -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --saffron: #FF9933;
+            --white: #FFFFFF;
+            --green: #138808;
+            --navy-blue: #000080;
+            --deep-indigo: #0A0F2C;
+        }
+
+        body {
+            font-family: 'Poppins', 'Inter', sans-serif;
+            background: linear-gradient(135deg, #fef9e6 0%, #fff6e0 100%);
+            color: var(--navy-blue);
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--saffron) 33.3%, var(--white) 33.3%, var(--white) 66.6%, var(--green) 66.6%);
+            z-index: 1000;
+        }
+
+        .profetian-card {
+            background: rgba(255, 255, 255, 0.96);
+            border: 3px solid var(--navy-blue);
+            border-radius: 24px;
+            box-shadow: 8px 8px 0px 0px var(--saffron);
+            transition: all 0.2s ease;
+        }
+
+        .profetian-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 12px 12px 0px 0px var(--green);
+        }
+
+        .stat-number {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--navy-blue), var(--saffron));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .flag-badge {
+            background: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 0.7rem;
+            color: var(--navy-blue);
+            border: 1px solid var(--navy-blue);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-16 antialiased">
+
+<nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b-4 border-navy-blue shadow-sm">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <i data-lucide="trending-up" class="w-8 h-8 text-saffron"></i>
+            <div>
+                <span class="font-black text-2xl tracking-tighter uppercase">PROPHETIAN <span class="text-saffron">ANALYTICS</span></span>
+                <div class="text-[10px] font-bold text-green-700 -mt-1 tracking-widest uppercase">India's Academic Intelligence</div>
+            </div>
+        </div>
+        <a href="#" class="font-black uppercase text-xs border-2 border-navy-blue px-5 py-2 rounded-full bg-white hover:bg-navy-blue hover:text-white transition-all flex items-center gap-2">
+            <i data-lucide="book-open" class="w-4 h-4"></i> Knowledge Hub
+        </a>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto p-5 md:p-8 mt-4">
+
+    <!-- STATS ROW -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+        <div class="profetian-card p-5">
+            <span class="text-[11px] font-black uppercase text-gray-500 flex items-center gap-1"><i data-lucide="zap" class="w-3 h-3"></i> Total Quizzes</span>
+            <div class="text-5xl font-black stat-number mt-1">42</div>
+            <div class="flex items-center gap-2 mt-3"><span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-0.5 rounded-full">↑ 12%</span></div>
+        </div>
+        <div class="profetian-card p-5">
+            <span class="text-[11px] font-black uppercase text-gray-500 flex items-center gap-1"><i data-lucide="target" class="w-3 h-3"></i> Avg. Accuracy</span>
+            <div class="text-5xl font-black stat-number mt-1">88%</div>
+            <div class="mt-3 flex gap-1"><span class="text-saffron text-xs font-black">★★★★★</span></div>
+        </div>
+        <div class="profetian-card p-5">
+            <span class="text-[11px] font-black uppercase text-gray-500 flex items-center gap-1"><i data-lucide="brain" class="w-3 h-3"></i> Questions Solved</span>
+            <div class="text-5xl font-black stat-number mt-1">1,204</div>
+            <div class="mt-3"><span class="flag-badge">🇮🇳 TOP 5% NATIONALLY</span></div>
+        </div>
+        <div class="profetian-card p-5">
+            <span class="text-[11px] font-black uppercase text-gray-500 flex items-center gap-1"><i data-lucide="flame" class="w-3 h-3"></i> Daily Streak</span>
+            <div class="text-5xl font-black stat-number mt-1">15 Days</div>
+            <div class="mt-3 text-[10px] font-bold text-saffron uppercase italic">🔥 Burning bright</div>
+        </div>
+    </div>
+
+    <!-- 3D & SIDE GRAPHS -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+            <div class="mb-4">
+                <h2 class="text-2xl font-black uppercase tracking-tighter flex items-center gap-2">
+                    <i data-lucide="mountain" class="w-7 h-7 text-saffron"></i> 3D <span class="text-saffron">Knowledge Landscape</span>
+                </h2>
+                <p class="text-[10px] font-bold text-gray-500 uppercase">Multi-color peaks: Saffron (High Mastery) | White (Average) | Green (Foundation)</p>
+            </div>
+            <div id="three-container" class="w-full h-[450px] border-4 border-navy-blue shadow-xl bg-[#0A0F2C] overflow-hidden relative rounded-3xl"></div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="profetian-card p-5">
+                <h3 class="font-black text-sm uppercase flex items-center gap-2 mb-4"><i data-lucide="bar-chart-2" class="w-4 h-4 text-green"></i> Subject Performance</h3>
+                <div class="h-64"><canvas id="masteryBarChart"></canvas></div>
+            </div>
+            <div class="profetian-card p-5">
+                <h3 class="font-black text-sm uppercase flex items-center gap-2 mb-4"><i data-lucide="calendar" class="w-4 h-4 text-saffron"></i> Weekly Study Hours</h3>
+                <div class="h-56"><canvas id="weeklyBarChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM ROW: PREDICTION & GROWTH GRAPH -->
+    <div class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div class="profetian-card p-6">
+            <h2 class="font-black text-xl uppercase flex gap-2 items-center mb-4"><i data-lucide="trending-up" class="w-7 h-7 text-green"></i> Success Projection</h2>
+            <div class="h-64"><canvas id="predictiveBarChart"></canvas></div>
+        </div>
+        <div class="profetian-card p-6">
+            <h2 class="font-black text-xl uppercase flex gap-2 items-center mb-4"><i data-lucide="line-chart" class="w-7 h-7 text-navy-blue"></i> Knowledge Growth Trend</h2>
+            <div class="h-64"><canvas id="growthLineChart"></canvas></div>
+        </div>
+    </div>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        lucide.createIcons();
+
+        // 1. Bar Chart: Mastery
+        new Chart(document.getElementById('masteryBarChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Physics', 'History', 'Math', 'English', 'Biology'],
+                datasets: [{ label: 'Score', data: [90, 70, 85, 60, 95], backgroundColor: '#FF9933', borderRadius: 5 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // 2. Weekly Chart
+        new Chart(document.getElementById('weeklyBarChart'), {
+            type: 'bar',
+            data: {
+                labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+                datasets: [{ label: 'Hours', data: [4, 6, 5, 8, 3, 10, 12], backgroundColor: '#138808', borderRadius: 5 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // 3. Predictive Forecast
+        new Chart(document.getElementById('predictiveBarChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{ label: 'Predicted %', data: [88, 91, 94, 98], backgroundColor: '#000080', borderRadius: 8 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // 4. NEW GROWTH LINE CHART
+        new Chart(document.getElementById('growthLineChart'), {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Learning Index',
+                    data: [40, 45, 60, 75, 82, 94],
+                    borderColor: '#FF9933',
+                    backgroundColor: 'rgba(255, 153, 51, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+
+        // 5. MULTI-COLOR 3D MOUNTAIN
+       const initThree = () => {
+    const container = document.getElementById('three-container');
+
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000); // dark graph background
+
+    const camera = new THREE.PerspectiveCamera(
+        45,
+        container.clientWidth / container.clientHeight,
+        0.1,
+        1000
+    );
+
+    camera.position.set(14, 14, 14);
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true
+    });
+
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
+
+    // ---------------------------
+    // 📊 GRAPH GRID BACKGROUND
+    // ---------------------------
+    const gridHelper = new THREE.GridHelper(
+        40,
+        40,
+        0xFF9933, // saffron lines
+        0x138808  // green lines
+    );
+    gridHelper.position.y = -2;
+    gridHelper.material.opacity = 0.25;
+    gridHelper.material.transparent = true;
+    scene.add(gridHelper);
+
+    // ---------------------------
+    // 📈 AXES (GRAPH FEEL)
+    // ---------------------------
+    const axesHelper = new THREE.AxesHelper(10);
+    axesHelper.material.opacity = 0.4;
+    axesHelper.material.transparent = true;
+    scene.add(axesHelper);
+
+    // ---------------------------
+    // ⛰️ CURVE TERRAIN (DATA SURFACE)
+    // ---------------------------
+    const geometry = new THREE.PlaneGeometry(20, 20, 100, 100);
+
+    const pos = geometry.attributes.position.array;
+    const colors = [];
+    const color = new THREE.Color();
+
+    for (let i = 0; i < pos.length; i += 3) {
+
+        const x = pos[i];
+        const y = pos[i + 1];
+
+        // 📊 STRONGER CURVE (GRAPH LIKE WAVES)
+        const z =
+            Math.sin(x * 0.8) * Math.cos(y * 0.8) * 3.5 +
+            Math.sin(x * 1.8) * 0.8 +
+            Math.cos(y * 1.2) * 0.6;
+
+        pos[i + 2] = z;
+
+        // 🎨 COLOR BY VALUE (GRAPH HEAT MAP)
+        if (z > 2) color.set(0xFF9933);      // high peak (saffron)
+        else if (z > 0) color.set(0xFFFFFF); // mid (white)
+        else color.set(0x138808);            // low (green)
+
+        colors.push(color.r, color.g, color.b);
+    }
+
+    geometry.setAttribute(
+        'color',
+        new THREE.Float32BufferAttribute(colors, 3)
+    );
+
+    geometry.computeVertexNormals();
+
+    // ---------------------------
+    // 🧠 MATERIAL (GRAPH SURFACE)
+    // ---------------------------
+    const material = new THREE.MeshStandardMaterial({
+        vertexColors: true,
+        wireframe: true,     // IMPORTANT → graph look
+        transparent: true,
+        opacity: 0.35,
+        roughness: 0.6,
+        metalness: 0.1
+    });
+
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.rotation.x = -Math.PI / 2;
+    scene.add(mesh);
+
+    // ---------------------------
+    // 💡 LIGHTS
+    // ---------------------------
+    const light = new THREE.DirectionalLight(0xffffff, 1.5);
+    light.position.set(5, 10, 5);
+    scene.add(light);
+
+    scene.add(new THREE.AmbientLight(0xffffff, 0.3));
+
+    // ---------------------------
+    // 🔄 ANIMATION
+    // ---------------------------
+    const animate = () => {
+        requestAnimationFrame(animate);
+
+        mesh.rotation.z += 0.0015; // slow graph movement
+
+        renderer.render(scene, camera);
+    };
+
+    animate();
+
+    // ---------------------------
+    // 📱 RESPONSIVE
+    // ---------------------------
+    window.addEventListener('resize', () => {
+        camera.aspect = container.clientWidth / container.clientHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(container.clientWidth, container.clientHeight);
+    });
+};
+
+initThree();
+    });
+</script>
+</body>
+</html>

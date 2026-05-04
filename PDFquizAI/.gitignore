@@ -1,0 +1,80 @@
+# =========================
+# Maven / Build output
+# =========================
+target/
+build/
+out/
+*.log
+
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+.mvn/wrapper/maven-wrapper.jar
+
+# =========================
+# Environment & Config files (IMPORTANT)
+# =========================
+*.env
+.env
+.env.*
+!.env.example
+
+application.properties
+application.yml
+application.yaml
+
+# If you want to ignore only local configs:
+# application-local.properties
+# application-local.yml
+
+# =========================
+# Spring Boot / Help files
+# =========================
+HELP.md
+
+# =========================
+# STS (Spring Tool Suite)
+# =========================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# =========================
+# IntelliJ IDEA
+# =========================
+.idea
+*.iws
+*.iml
+*.ipr
+*.iws
+
+# =========================
+# NetBeans
+# =========================
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# =========================
+# VS Code
+# =========================
+.vscode/
+
+# =========================
+# OS files
+# =========================
+.DS_Store
+Thumbs.db
+
+# =========================
+# Java compiled files
+# =========================
+*.class
