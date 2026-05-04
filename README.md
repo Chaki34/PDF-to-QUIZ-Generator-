@@ -1,158 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PDF Quiz AI - README</title>
 
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-# 🚀 `README.md`
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-```md id="r1dme0"
-# 🎯 PDF-to-QUIZ-Generator ⚡
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest"></script>
 
-> 🚀 A full-stack AI-powered platform using **Spring AI** that converts PDFs into interactive quizzes instantly.
+<style>
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: white;
+    overflow-x: hidden;
+}
 
----
+.bg-glow {
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    background: #4f46e5;
+    filter: blur(150px);
+    opacity: 0.4;
+    animation: move 8s infinite alternate;
+    border-radius: 50%;
+}
 
-## 🌈 ✨ Overview
+@keyframes move {
+    from { transform: translate(-100px, -100px); }
+    to { transform: translate(200px, 200px); }
+}
 
-🎓 Turn your boring PDFs into smart quizzes  
-🤖 Powered by **Spring Boot + Spring AI**  
-📄 Upload → Process → Generate Quiz → Learn Faster
+.container {
+    max-width: 1000px;
+    margin: auto;
+    padding: 40px;
+}
 
----
+header {
+    text-align: center;
+    padding: 60px 20px;
+}
 
-## 🎬 Demo Preview
+h1 {
+    font-size: 42px;
+    background: linear-gradient(90deg, #ff9933, #ffffff, #138808);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-![AI Animation](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExd2Z0b3V2dG1pY2JxN2R1aG1wZ2h6d2R6b3F0a3R6eWZ2d3V3bGZ2dCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/3o7aD2saalBwwftBIY/giphy.gif)
+.card {
+    background: rgba(255,255,255,0.06);
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: 0.3s;
+}
 
----
+.card:hover {
+    transform: translateY(-6px);
+}
 
-## ⚙️ Tech Stack
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    margin: 5px;
+    border-radius: 999px;
+    font-size: 12px;
+    background: #4f46e5;
+}
 
-🔥 Backend:
-- ☕ Spring Boot
-- 🤖 Spring AI
-- 🧠 OpenAI / LLM Integration
+.row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-🎨 Frontend:
-- 🌐 HTML5
-- 🎨 Tailwind CSS
-- ⚡ Thymeleaf
+pre {
+    background: #111827;
+    padding: 15px;
+    border-radius: 10px;
+    overflow-x: auto;
+}
 
-🗄️ Database:
-- MySQL / PostgreSQL
+footer {
+    text-align: center;
+    margin-top: 40px;
+    opacity: 0.7;
+}
 
----
+.icon {
+    width: 18px;
+    height: 18px;
+}
+</style>
+</head>
 
-## 🚀 Features
+<body>
 
-✨ Upload PDF files  
-🤖 AI-based quiz generation  
-📊 Smart question creation  
-📚 Subject-based organization  
-⚡ Fast processing engine  
-📈 Scoring & tracking system  
+<div class="bg-glow"></div>
 
----
+<div class="container">
 
-## 🧠 How It Works
+<header>
+    <h1>🎯 PDF-to-QUIZ Generator ⚡</h1>
+    <p>AI Powered Full Stack Spring Boot Platform</p>
+</header>
 
-```
+<!-- OVERVIEW -->
+<div class="card">
+    <div class="row">
+        <i data-lucide="sparkles" class="icon"></i>
+        <h2>Overview</h2>
+    </div>
 
-📄 PDF Upload
-↓
-🧠 AI Processing (Spring AI)
-↓
-❓ Quiz Generation
-↓
-🎯 User Practice Mode
-↓
-📊 Score Analysis
+    <p>Convert PDFs into intelligent AI-generated quizzes.</p>
 
-````
+    <span class="badge">
+        <i data-lucide="leaf" class="icon"></i> Spring Boot
+    </span>
 
----
+    <span class="badge">
+        <i data-lucide="cpu" class="icon"></i> Spring AI
+    </span>
 
-## ⚙️ Setup Instructions
+    <span class="badge">
+        <i data-lucide="layers" class="icon"></i> Full Stack
+    </span>
+</div>
 
-### 1️⃣ Clone Repo
-```bash
-git clone https://github.com/Chaki34/PDF-to-QUIZ-Generator-.git
-````
+<!-- FEATURES -->
+<div class="card">
+    <div class="row">
+        <i data-lucide="zap" class="icon"></i>
+        <h2>Features</h2>
+    </div>
 
-### 2️⃣ Open Project
+    <ul>
+        <li>📄 PDF Upload System</li>
+        <li>🤖 AI Quiz Generation</li>
+        <li>📊 Score Tracking</li>
+        <li>⚡ Fast Processing Engine</li>
+    </ul>
+</div>
 
-Open in IntelliJ / STS / VS Code
+<!-- SETUP -->
+<div class="card">
+    <div class="row">
+        <i data-lucide="settings" class="icon"></i>
+        <h2>Setup</h2>
+    </div>
 
-### 3️⃣ Configure Environment
-
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/pdfquiz
-spring.datasource.username=root
-spring.datasource.password=your_password
-```
-
-### 4️⃣ Run Project
-
-```bash
+<pre>
+git clone https://github.com/your-repo
 mvn spring-boot:run
-```
+</pre>
+</div>
 
----
+<!-- FLOW -->
+<div class="card">
+    <div class="row">
+        <i data-lucide="git-branch" class="icon"></i>
+        <h2>System Flow</h2>
+    </div>
 
-## 📂 Project Structure
+<pre>
+PDF Upload
+   ↓
+AI Processing
+   ↓
+Quiz Generation
+   ↓
+Practice Mode
+   ↓
+Score Result
+</pre>
+</div>
 
-```
-src/
- ├── controller
- ├── service
- ├── repository
- ├── model
-uploads/
-config/
-```
+<!-- TECH -->
+<div class="card">
+    <div class="row">
+        <i data-lucide="code" class="icon"></i>
+        <h2>Tech Stack</h2>
+    </div>
 
----
+<p>
+Spring Boot • Spring AI • MySQL • Thymeleaf • HTML/CSS
+</p>
+</div>
 
-## 🔥 Future Improvements
+<footer>
+    💙 Built with Spring Boot + AI + Passion
+</footer>
 
-🚀 Voice-based quiz system
-📱 Mobile app version
-🧠 Advanced AI difficulty scaling
-🌍 Multi-language support
+</div>
 
----
+<script>
+lucide.createIcons();
+</script>
 
-## 👨‍💻 Author
-
-💡 Developed with passion using Spring AI + Full Stack Engineering
-
----
-
-## ⭐ Support
-
-If you like this project:
-⭐ Star the repo
-🍴 Fork it
-🚀 Share it
-
----
-
-> 💙 Built with Spring Boot + AI + Passion
-
-```
-
----
-
-# 💡 Important Note (real GitHub limitation)
-
-- ❌ No real CSS animations in README.md  
-- ✅ But GIFs + badges + emojis = “animated feel”
-
----
-
-# 🚀 If you want next upgrade, I can make:
-- 🔥 :contentReference[oaicite:0]{index=0}
-- 🎨 :contentReference[oaicite:1]{index=1}
-- 📊 :contentReference[oaicite:2]{index=2}
-- 🚀 :contentReference[oaicite:3]{index=3}
-- 🧠 :contentReference[oaicite:4]{index=4}
-
-Just tell 👍
-```
+</body>
+</html>
