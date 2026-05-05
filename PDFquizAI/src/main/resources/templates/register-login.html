@@ -33,7 +33,6 @@
             overflow-x: hidden;
         }
 
-        /* THREE.JS BACKGROUND */
         #three-bg {
             position: fixed;
             top: 0;
@@ -44,7 +43,6 @@
             pointer-events: none;
         }
 
-        /* NEO-BRUTALISM UI STYLES */
         .border-navy { border: 4px solid var(--navy); }
         .neo-shadow { box-shadow: 10px 10px 0px 0px var(--navy); }
 
@@ -81,7 +79,6 @@
             box-shadow: 12px 12px 0px 0px var(--navy);
         }
 
-        /* MODEL CONTAINER */
         #item-container {
             width: 100%;
             height: 400px;
@@ -115,7 +112,6 @@
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-<!-- Three.js Background -->
 <canvas id="three-bg"></canvas>
 
 <div class="max-w-5xl w-full grid grid-cols-1 lg:grid-cols-2 bg-white/95 backdrop-blur-sm border-navy border-4 neo-shadow rounded-[40px] overflow-hidden relative z-10">
@@ -159,28 +155,110 @@
             <button onclick="toggleMode('login')" id="tab-log" class="pb-2 text-sm font-black uppercase border-b-4 border-transparent text-gray-400 transition-all">Login</button>
         </div>
 
-        <form onsubmit="handleFormSubmit(event); return false;">
-            <div id="name-field" class="mb-4">
-                <label class="block font-black uppercase text-[10px] mb-1">Full Name</label>
-                <input type="text" id="fullNameInput" placeholder="Enter your name" class="input-neo"
-                       onfocus="instructorAction('name')" onblur="instructorAction('idle')">
+        <form id="auth-form" onsubmit="return false;">
+
+            <!-- REGISTRATION STEPS -->
+            <div id="register-container">
+                <!-- STEP 1: INITIAL GOOGLE AUTH -->
+                <div id="reg-step-1" th:style="${email == null ? 'display:block' : 'display:none'}">
+                    <button type="button" onclick="googleLogin()" class="btn-saffron text-lg flex items-center justify-center gap-2">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5">
+                        Continue with Google
+                    </button>
+                </div>
+
+                <!-- STEP 2: USER INFO (VISIBLE AFTER OAUTH SUCCESS) -->
+                <!-- STEP 2 -->
+                <div id="reg-step-2" th:style="${email != null ? 'display:block' : 'display:none'}">
+
+                    <!-- USER INFO -->
+                    <div class="mb-6 text-center">
+                        <img id="g-user-pic"
+                             th:src="${picture != null ? picture : 'https://api.dicebear.com/7.x/avataaars/svg?seed=Felix'}"
+                             class="w-20 h-20 rounded-full mx-auto border-4 border-navy shadow-md">
+
+                        <h3 id="g-user-name"
+                            class="font-black text-lg mt-3"
+                            th:text="${name != null ? name : 'Welcome'}">New User</h3>
+
+                        <p id="g-user-email"
+                           class="text-xs text-gray-500 break-all"
+                           th:text="${email}">user@example.com</p>
+                    </div>
+
+                    <!-- PHONE -->
+                    <div class="mb-4">
+                        <label class="block font-black uppercase text-[10px] mb-1">Phone Number</label>
+                        <input type="tel"
+                               id="reg-phone"
+                               placeholder="Enter phone number"
+                               class="input-neo"
+                               required>
+                        <p id="phone-error" class="text-red-500 text-xs mt-1 hidden">Enter valid phone</p>
+                    </div>
+
+                    <!-- PASSWORD -->
+                    <div class="mb-4">
+                        <label class="block font-black uppercase text-[10px] mb-1">Create Password</label>
+                        <input type="password"
+                               id="reg-password"
+                               placeholder="Min 6 characters"
+                               class="input-neo"
+                               required>
+                        <p id="pass-error" class="text-red-500 text-xs mt-1 hidden">Password too short</p>
+                    </div>
+
+                    <!-- BUTTON -->
+                    <button id="step2-btn"
+                            type="button"
+                            onclick="goToOTP()"
+                            class="btn-saffron flex items-center justify-center gap-2">
+
+                        <span id="btn-text">Save & Continue</span>
+                        <span id="btn-loader" class="hidden animate-spin">⏳</span>
+                    </button>
+
+                </div>
+
+                <!-- STEP 3: OTP -->
+                <div id="reg-step-3"
+                     th:style="${step == 'otp'} ? 'display:block' : 'display:none;'">
+                    <p class="text-center font-black mb-4">Enter 4 Digit OTP</p>
+                    <div class="flex gap-2 justify-center mb-6">
+                        <input maxlength="1" class="otp-input input-neo text-center w-12">
+                        <input maxlength="1" class="otp-input input-neo text-center w-12">
+                        <input maxlength="1" class="otp-input input-neo text-center w-12">
+                        <input maxlength="1" class="otp-input input-neo text-center w-12">
+                    </div>
+                    <button type="button" onclick="verifyOTP()" class="btn-saffron">Verify OTP</button>
+                </div>
             </div>
 
-            <div class="mb-4">
-                <label class="block font-black uppercase text-[10px] mb-1">Email Address</label>
-                <input type="email" id="emailInput" placeholder="hello@example.com" class="input-neo"
-                       onfocus="instructorAction('email')" onblur="instructorAction('idle')">
+            <!-- LOGIN SECTION -->
+            <div id="login-section"
+                 th:style="${step == 'login'} ? 'display:block' : 'display:none;'">
+                <div class="mb-4">
+                    <label class="block font-black uppercase text-[10px] mb-1">Email or Phone</label>
+                    <input type="text" class="input-neo" onfocus="instructorAction('email')" onblur="instructorAction('idle')">
+                </div>
+                <div class="mb-6">
+                    <label class="block font-black uppercase text-[10px] mb-1">Password</label>
+                    <input type="password" class="input-neo" onfocus="instructorAction('password')" onblur="instructorAction('idle')">
+                </div>
+                <button type="submit" onclick="handleLoginSubmit()" class="btn-saffron mb-4">Login Now</button>
+
+                <div class="relative flex py-4 items-center">
+                    <div class="flex-grow border-t-2 border-gray-100"></div>
+                    <span class="flex-shrink mx-4 text-gray-400 text-[10px] font-bold uppercase">OR</span>
+                    <div class="flex-grow border-t-2 border-gray-100"></div>
+                </div>
+
+                <button type="button" onclick="googleLogin()" class="w-full border-4 border-navy p-3 font-bold flex items-center justify-center gap-2 hover:bg-gray-50 transition-all">
+                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5">
+                    Login with Google
+                </button>
             </div>
 
-            <div class="mb-6">
-                <label class="block font-black uppercase text-[10px] mb-1">Password</label>
-                <input type="password" id="passwordInput" placeholder="••••••••" class="input-neo"
-                       onfocus="instructorAction('password')" onblur="instructorAction('idle')">
-            </div>
-
-            <button type="submit" id="submit-btn" class="btn-saffron text-lg flex items-center justify-center gap-2">
-                <i data-lucide="sparkles" class="w-5 h-5"></i> Create Account
-            </button>
         </form>
 
         <div class="mt-8 pt-6 border-t-2 border-gray-100 flex justify-between items-center">
@@ -193,8 +271,8 @@
     </div>
 </div>
 
+<!-- Three.js Background Script -->
 <script>
-    // --- THREE.JS BACKGROUND LOGIC ---
     const canvas = document.querySelector('#three-bg');
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     const scene = new THREE.Scene();
@@ -205,10 +283,8 @@
     const mouse = new THREE.Vector2(-10, -10);
     const docItems = [];
     const docFormats = [
-        { label: 'PDF', color: '#FF3333' },
-        { label: 'DOCX', color: '#000080' },
-        { label: 'TXT', color: '#138808' },
-        { label: 'PPTX', color: '#FF9933' }
+        { label: 'PDF', color: '#FF3333' }, { label: 'DOCX', color: '#000080' },
+        { label: 'TXT', color: '#138808' }, { label: 'PPTX', color: '#FF9933' }
     ];
 
     function createDocTexture(label, color) {
@@ -237,16 +313,12 @@
     function addIcon() {
         const format = docFormats[Math.floor(Math.random() * docFormats.length)];
         const texture = createDocTexture(format.label, format.color);
-        const material = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0.2, color: 0xffffff });
+        const material = new THREE.SpriteMaterial({ map: texture, transparent: true, opacity: 0.2 });
         const sprite = new THREE.Sprite(material);
         sprite.position.set((Math.random()-0.5)*25, (Math.random()-0.5)*20, (Math.random()-0.5)*10);
         const baseScale = 1.1 + Math.random();
         sprite.scale.set(baseScale, baseScale, 1);
-        sprite.userData = {
-            baseScale: baseScale,
-            brandColor: new THREE.Color(format.color),
-            velocity: new THREE.Vector3((Math.random()-0.5)*0.005, (Math.random()-0.5)*0.005, 0)
-        };
+        sprite.userData = { baseScale, brandColor: new THREE.Color(format.color), velocity: new THREE.Vector3((Math.random()-0.5)*0.005, (Math.random()-0.5)*0.005, 0) };
         scene.add(sprite);
         docItems.push(sprite);
     }
@@ -269,76 +341,160 @@
             s.position.add(s.userData.velocity);
             s.position.y += Math.sin(time + i) * 0.002;
             if (s === hoveredObject) {
-                s.material.opacity = THREE.MathUtils.lerp(s.material.opacity, 0.9, 0.1);
+                s.material.opacity = 0.9;
                 s.material.color.lerp(s.userData.brandColor, 0.1);
-                const tScale = s.userData.baseScale * 1.5;
-                s.scale.lerp(new THREE.Vector3(tScale, tScale, 1), 0.1);
+                s.scale.lerp(new THREE.Vector3(s.userData.baseScale * 1.5, s.userData.baseScale * 1.5, 1), 0.1);
             } else {
-                s.material.opacity = THREE.MathUtils.lerp(s.material.opacity, 0.2, 0.05);
+                s.material.opacity = 0.2;
                 s.material.color.lerp(new THREE.Color(0xffffff), 0.05);
                 s.scale.lerp(new THREE.Vector3(s.userData.baseScale, s.userData.baseScale, 1), 0.05);
             }
-            if (s.position.x > 15) s.position.x = -15;
-            if (s.position.x < -15) s.position.x = 15;
-            if (s.position.y > 10) s.position.y = -10;
-            if (s.position.y < -10) s.position.y = 10;
+            if (s.position.x > 15 || s.position.x < -15) s.position.x *= -0.9;
+            if (s.position.y > 10 || s.position.y < -10) s.position.y *= -0.9;
         });
         renderer.render(scene, camera);
     }
-
-    window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-    });
     renderer.setSize(window.innerWidth, window.innerHeight);
     animate();
+</script>
 
-    // --- ORIGINAL ROBOT & FORM LOGIC ---
+<!-- Logic Script -->
+<script th:inline="javascript">
     const robot = document.getElementById('ai-robot');
     const bubble = document.getElementById('ai-bubble');
 
     window.instructorAction = (action) => {
-        if (!robot) return;
+        if (!robot || !bubble) return;
         switch(action) {
-            case 'name':
-                robot.animationName = "Dance";
-                bubble.innerHTML = '"What a wonderful name! <br> Glad to meet you."';
-                break;
-            case 'email':
-                robot.animationName = "Walking";
-                bubble.innerHTML = '"I will send your <br> quiz results here."';
-                break;
-            case 'password':
-                robot.animationName = "Death";
-                bubble.innerHTML = '"Don\'t worry, <br> I\'m not looking!"';
-                break;
-            case 'success':
-                robot.animationName = "Jump";
-                bubble.innerHTML = '"Success! <br> Let\'s get started."';
-                break;
-            case 'idle':
-            default:
-                robot.animationName = "Walking";
-                bubble.innerHTML = '"Namaste! <br> I am your AI Instructor."';
-                break;
+            case 'email': bubble.innerHTML = '"I will send your <br> quiz results here."'; break;
+            case 'password': robot.animationName = "Death"; bubble.innerHTML = '"Don\'t worry, <br> I\'m not looking!"'; break;
+            case 'success': robot.animationName = "Jump"; bubble.innerHTML = '"Success! <br> Let\'s get started."'; break;
+            default: robot.animationName = "Walking"; bubble.innerHTML = '"Namaste! <br> I am your AI Instructor."'; break;
         }
     };
 
     window.toggleMode = (mode) => {
         const isReg = mode === 'register';
-        document.getElementById('name-field').style.display = isReg ? 'block' : 'none';
-        document.getElementById('tab-reg').className = isReg ? 'pb-2 text-sm font-black uppercase border-b-4 border-saffron text-navy' : 'pb-2 text-sm font-black uppercase border-b-4 border-transparent text-gray-400';
-        document.getElementById('tab-log').className = !isReg ? 'pb-2 text-sm font-black uppercase border-b-4 border-saffron text-navy' : 'pb-2 text-sm font-black uppercase border-b-4 border-transparent text-gray-400';
-        document.getElementById('submit-btn').innerHTML = isReg ? '<i data-lucide="sparkles" class="w-5 h-5"></i> Create Account' : '<i data-lucide="log-in" class="w-5 h-5"></i> Welcome Back';
-        lucide.createIcons();
+        document.getElementById('register-container').style.display = isReg ? 'block' : 'none';
+        document.getElementById('login-section').style.display = isReg ? 'none' : 'block';
+        document.getElementById('tab-reg').className = isReg ? 'pb-2 text-sm font-black uppercase border-b-4 border-saffron text-navy transition-all' : 'pb-2 text-sm font-black uppercase border-b-4 border-transparent text-gray-400 transition-all';
+        document.getElementById('tab-log').className = !isReg ? 'pb-2 text-sm font-black uppercase border-b-4 border-saffron text-navy transition-all' : 'pb-2 text-sm font-black uppercase border-b-4 border-transparent text-gray-400 transition-all';
     };
 
-    window.handleFormSubmit = (e) => {
-        e.preventDefault();
-        instructorAction('success');
-        setTimeout(() => alert("Redirecting to Dashboard..."), 1000);
+    window.googleLogin = () => {
+        window.location.href = "/oauth2/authorization/google";
     };
+
+    window.goToOTP = async () => {
+    const phone = document.getElementById('reg-phone').value;
+    const password = document.getElementById('reg-password').value;
+
+    if (!phone || !password) {
+        alert("Fill all fields");
+        return;
+    }
+
+    // save profile first
+    const res = await fetch("/complete-profile", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ phone, password })
+    });
+
+    if (res.ok) {
+
+        // SEND OTP
+        const otpRes = await fetch("/send-otp", {
+            method: "POST"
+        });
+
+        if (otpRes.ok) {
+            document.getElementById('reg-step-2').style.display = 'none';
+            document.getElementById('reg-step-3').style.display = 'block';
+        } else {
+            alert("Failed to send OTP");
+        }
+
+    } else {
+        alert("Profile save failed");
+    }
+};
+
+   window.verifyOTP = async () => {
+
+    let otp = "";
+    document.querySelectorAll('.otp-input').forEach(i => otp += i.value);
+
+    if (otp.length !== 4) {
+        alert("Enter 4 digit OTP");
+        return;
+    }
+
+    const res = await fetch("/verify-otp", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ otp })
+    });
+
+    const text = await res.text();
+
+    if (text === "VERIFIED") {
+        alert("OTP Verified Successfully");
+       window.location.href = "/auth?step=login";   // 🔥 redirect to login
+    } else {
+        alert("Invalid OTP");
+    }
+};
+
+const params = new URLSearchParams(window.location.search);
+const step = params.get("step");
+
+if (step === "login") {
+    document.getElementById("register-container").style.display = "none";
+    document.getElementById("login-section").style.display = "block";
+}
+
+window.handleLoginSubmit = async () => {
+
+    instructorAction('success');
+
+    const email = document.querySelector('#login-section input[type="text"]').value;
+    const password = document.querySelector('#login-section input[type="password"]').value;
+
+    if (!email || !password) {
+        alert("Please fill all fields");
+        instructorAction('idle');
+        return;
+    }
+
+    try {
+        const res = await fetch("/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email,
+                password
+            })
+        });
+
+        const text = await res.text();
+
+        if (text === "SUCCESS") {
+            // 🔥 redirect to dashboard
+            window.location.href = "/dashboard";
+        } else {
+            alert("Invalid credentials");
+            instructorAction('idle');
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("Login failed. Try again.");
+        instructorAction('idle');
+    }
+};
 
     lucide.createIcons();
 </script>

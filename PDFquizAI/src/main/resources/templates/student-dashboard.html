@@ -55,9 +55,34 @@
 <div class="max-w-7xl mx-auto">
 
     <!-- Welcome Header -->
-    <header class="mb-8">
-        <h1 class="text-3xl font-extrabold text-[#000080]">Welcome back! <span class="text-[#FF9933]">👋</span></h1>
-        <p class="text-gray-500 font-medium">Ready to continue your learning journey? Let's create some amazing quizzes!</p>
+    <header class="mb-8 flex items-center justify-between">
+
+        <!-- LEFT: USER INFO -->
+        <div class="flex items-center gap-4">
+
+            <img th:src="${picture}"
+                 class="w-12 h-12 rounded-full border-2 border-[#000080]" />
+
+            <div>
+                <h1 class="text-3xl font-extrabold text-[#000080]">
+                    Welcome back, <span th:text="${name}" class="text-[#FF9933]">User</span> 👋
+                </h1>
+
+                <p class="text-gray-500 font-medium">
+                    Ready to continue your learning journey? Let's create some amazing quizzes!
+                </p>
+            </div>
+
+        </div>
+
+        <!-- RIGHT: LOGOUT -->
+        <a href="/logout"
+           class="bg-[#FF9933] text-white font-bold px-4 py-2 border-4 border-[#000080]
+              shadow-[4px_4px_0px_#000080] hover:translate-x-[-2px] hover:translate-y-[-2px]
+              transition-all">
+            Logout
+        </a>
+
     </header>
 
     <!-- Stats Row -->
@@ -138,6 +163,11 @@
                     <button id="openModalBtn" class="w-full bg-[#FF9933] text-white py-3 border-navy rounded-xl neo-shadow-sm font-bold flex items-center gap-3 px-4 hover:translate-y-[-1px] transition-all">
                         <i data-lucide="plus-circle" class="w-5 h-5"></i> Generate Quiz
                     </button>
+                    <a th:href="@{/library}"
+                       class="w-full bg-[#FF9933] text-white py-3 border-navy rounded-xl neo-shadow-sm font-bold flex items-center gap-3 px-4 hover:translate-y-[-1px] transition-all">
+                        <i data-lucide="plus-circle" class="w-5 h-5"></i> All PDFs
+                    </a>
+
                     <button class="w-full bg-white border-navy py-3 rounded-xl font-bold flex items-center gap-3 px-4 hover:bg-gray-50 transition-all">
                         <i data-lucide="folder" class="w-5 h-5 text-gray-600"></i> Manage Collections
                     </button>
@@ -247,6 +277,8 @@
                 <div class="p-8 flex flex-col justify-center">
                     <form th:action="@{/upload}" method="POST" enctype="multipart/form-data">
                         <label class="block font-black text-navy uppercase tracking-widest text-xs mb-4">Step 2: Upload Document</label>
+
+                        <input type="file" name="pdfFile" id="fileInput" accept="application/pdf" hidden>
 
                         <div class="border-2 border-dashed border-navy bg-blue-50 rounded-2xl p-10 text-center flex flex-col items-center justify-center gap-4 hover:bg-blue-100 transition-all cursor-pointer group" onclick="document.getElementById('fileInput').click()">
                             <div class="w-16 h-16 bg-white border-navy rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform neo-shadow-sm">

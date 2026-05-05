@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Library | Pdf-To-Quiz AI</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+        }
+
+        :root {
+            --navy: #000080;
+        }
+
+        .border-navy { border: 2px solid var(--navy); }
+        .neo-shadow-sm { box-shadow: 2px 2px 0px 0px var(--navy); }
+
+        .card {
+            background: white;
+            border: 2px solid var(--navy);
+            border-radius: 20px;
+            padding: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+        }
+
+        .tag {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 999px;
+            border: 1px solid var(--navy);
+        }
+    </style>
+</head>
+
+<body class="p-6 md:p-10">
+
+<div class="max-w-7xl mx-auto">
+
+    <!-- HEADER -->
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-3xl font-extrabold text-[#000080]">
+                📚 Your PDF Library
+            </h1>
+            <p class="text-gray-500 font-medium">
+                Manage all uploaded documents and generated quizzes
+            </p>
+        </div>
+
+        <a href="/dashboard"
+           class="bg-[#FF9933] text-white font-bold px-4 py-2 border-2 border-[#000080]
+           neo-shadow-sm hover:translate-x-[-2px] hover:translate-y-[-2px] transition">
+            Back
+        </a>
+    </div>
+
+    <!-- GRID -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- PDF LOOP -->
+        <div th:each="pdf : ${pdfList}" class="card">
+
+            <!-- TOP SECTION -->
+            <div class="flex items-start justify-between">
+
+                <div class="flex gap-3">
+
+                    <div class="w-12 h-12 bg-blue-50 border-navy rounded-xl flex items-center justify-center">
+                        <i data-lucide="file-text" class="w-6 h-6 text-blue-600"></i>
+                    </div>
+
+                    <div>
+                        <!-- FIXED: originalName instead of name -->
+                        <h3 class="font-bold text-[#000080] text-sm"
+                            th:text="${pdf.originalName}">
+                            sample.pdf
+                        </h3>
+
+                        <!-- FIXED: uploadedAt instead of uploadTime -->
+                        <p class="text-[11px] text-gray-400"
+                           th:text="${#temporals.format(pdf.uploadedAt, 'dd MMM yyyy HH:mm')}">
+                            01 Jan 2026 10:00
+                        </p>
+                    </div>
+
+                </div>
+
+                <button class="text-gray-500 hover:text-[#000080]">
+                    <i data-lucide="more-vertical" class="w-5 h-5"></i>
+                </button>
+
+            </div>
+
+            <!-- TAGS -->
+            <div class="mt-4 flex flex-wrap gap-2">
+                <span class="tag bg-green-100 text-green-700">READY</span>
+                <span class="tag bg-blue-100 text-blue-700">PDF</span>
+                <span class="tag bg-purple-100 text-purple-700">AI</span>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="mt-5 flex gap-2">
+
+                <!-- VIEW -->
+                <a th:href="@{'/viewer?file=' + ${pdf.fileName}}"
+                   class="flex-1 bg-[#000080] text-white text-xs font-bold py-2 rounded-lg neo-shadow-sm text-center flex items-center justify-center gap-2">
+                    <i data-lucide="eye" class="w-4 h-4"></i> View
+                </a>
+
+                <!-- QUIZ -->
+                <a th:href="@{'/quiz?file=' + ${pdf.fileName}}"
+                   class="flex-1 bg-[#138808] text-white text-xs font-bold py-2 rounded-lg neo-shadow-sm text-center flex items-center justify-center gap-2">
+                    <i data-lucide="zap" class="w-4 h-4"></i> Quiz
+                </a>
+
+                <!-- DELETE -->
+                <a th:href="@{'/delete?file=' + ${pdf.fileName}}"
+                   class="bg-red-500 text-white text-xs font-bold px-3 py-2 rounded-lg border-navy">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- EMPTY STATE -->
+    <div th:if="${#lists.isEmpty(pdfList)}"
+         class="text-center mt-20 text-gray-400 font-bold">
+        <i data-lucide="folder-x" class="w-10 h-10 mx-auto mb-3"></i>
+        No PDFs uploaded yet
+    </div>
+
+</div>
+
+<script>
+    lucide.createIcons();
+</script>
+
+</body>
+</html>
