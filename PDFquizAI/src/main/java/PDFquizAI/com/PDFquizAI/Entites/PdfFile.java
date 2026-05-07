@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "pdf_files")
@@ -24,7 +26,10 @@ public class PdfFile {
 
     private LocalDateTime uploadedAt = LocalDateTime.now();
 
-    private Long userId; // link to user
+    private Long userId;
 
-    // getters & setters
+    @OneToMany(mappedBy = "pdfFile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<QuizAttempt> attempts = new ArrayList<>();
+
+
 }

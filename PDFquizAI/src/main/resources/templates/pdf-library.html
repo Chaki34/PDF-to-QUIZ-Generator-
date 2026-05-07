@@ -82,13 +82,11 @@
                     </div>
 
                     <div>
-                        <!-- FIXED: originalName instead of name -->
                         <h3 class="font-bold text-[#000080] text-sm"
                             th:text="${pdf.originalName}">
                             sample.pdf
                         </h3>
 
-                        <!-- FIXED: uploadedAt instead of uploadTime -->
                         <p class="text-[11px] text-gray-400"
                            th:text="${#temporals.format(pdf.uploadedAt, 'dd MMM yyyy HH:mm')}">
                             01 Jan 2026 10:00
@@ -113,23 +111,67 @@
             <!-- ACTION BUTTONS -->
             <div class="mt-5 flex gap-2">
 
-                <!-- VIEW -->
                 <a th:href="@{'/viewer?file=' + ${pdf.fileName}}"
                    class="flex-1 bg-[#000080] text-white text-xs font-bold py-2 rounded-lg neo-shadow-sm text-center flex items-center justify-center gap-2">
                     <i data-lucide="eye" class="w-4 h-4"></i> View
                 </a>
 
-                <!-- QUIZ -->
                 <a th:href="@{'/quiz?file=' + ${pdf.fileName}}"
                    class="flex-1 bg-[#138808] text-white text-xs font-bold py-2 rounded-lg neo-shadow-sm text-center flex items-center justify-center gap-2">
                     <i data-lucide="zap" class="w-4 h-4"></i> Quiz
                 </a>
 
-                <!-- DELETE -->
                 <a th:href="@{'/delete?file=' + ${pdf.fileName}}"
                    class="bg-red-500 text-white text-xs font-bold px-3 py-2 rounded-lg border-navy">
                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </a>
+
+            </div>
+
+            <!-- REVISION SECTION (ONLY QUESTIONS + ANSWERS) -->
+            <div class="mt-5 border-t pt-4">
+
+                <details class="group">
+
+                    <summary class="cursor-pointer flex justify-between items-center text-[#000080] font-bold text-sm">
+                        🧠 Revision Sets (Q&A)
+                        <i data-lucide="chevron-down" class="w-4 h-4 group-open:rotate-180 transition"></i>
+                    </summary>
+
+                    <div class="mt-3 space-y-3">
+
+                        <!-- LOOP ALL ATTEMPTS -->
+                        <div th:each="attempt : ${attempts}"
+                             class="border border-gray-200 rounded-xl p-3 bg-gray-50">
+
+                            <!-- ONLY Q/A CONTENT -->
+                            <pre class="text-[11px] text-gray-700 bg-white border rounded-lg p-2 overflow-x-auto"
+                                 th:text="${attempt.submittedAnswers}">
+                </pre>
+
+                        </div>
+
+                        <!-- EMPTY -->
+                        <div th:if="${attempts == null or #lists.isEmpty(attempts)}"
+                             class="text-xs text-gray-400 text-center py-3">
+                            No revision sets yet
+                        </div>
+
+                    </div>
+
+                </details>
+
+            </div>
+
+                        <!-- EMPTY STATE -->
+                        <div th:if="${pdf.attempts == null or #lists.isEmpty(pdf.attempts)}"
+                             class="text-xs text-gray-400 text-center py-3">
+                            No revision sets yet
+                        </div>
+
+                    </div>
+
+                </details>
 
             </div>
 

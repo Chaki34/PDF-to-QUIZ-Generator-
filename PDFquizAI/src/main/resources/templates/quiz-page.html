@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>AI Quiz | Pdf-To-Quiz AI</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --saffron: #FF9933;
+            --green: #138808;
+            --navy: #000080;
+            --light-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light-bg);
+            color: var(--navy);
+        }
+
+        .border-navy { border: 2px solid var(--navy); }
+
+        .neo-shadow { box-shadow: 4px 4px 0px 0px var(--navy); }
+
+        .neo-shadow-sm { box-shadow: 2px 2px 0px 0px var(--navy); }
+
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="h-screen overflow-hidden flex flex-col">
+
+<!-- NAVBAR -->
+<nav class="bg-white border-b-2 border-navy px-6 py-3 flex justify-between items-center shrink-0">
+
+    <div class="flex items-center gap-3">
+
+        <div class="w-10 h-10 rounded-xl bg-orange-500 border-2 border-navy text-white flex items-center justify-center">
+            <i data-lucide="brain-circuit" class="w-6 h-6"></i>
+        </div>
+
+        <div>
+            <h1 class="font-black text-xl uppercase leading-none">
+                Pdf-To-Quiz <span class="text-orange-500">AI</span>
+            </h1>
+
+            <p class="text-[9px] font-bold uppercase tracking-widest text-gray-400 mt-1">
+                AI QUIZ MODE
+            </p>
+        </div>
+
+    </div>
+
+    <div class="flex items-center gap-4">
+
+        <span class="bg-green-100 text-green-700 border border-green-200 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider">
+            QUIZ ACTIVE
+        </span>
+
+        <a href="/dashboard"
+           class="bg-red-500 text-white border-2 border-navy px-5 py-2 rounded-xl font-black text-xs neo-shadow-sm hover:-translate-y-1 transition-all">
+            Exit
+        </a>
+
+    </div>
+
+</nav>
+
+<!-- MAIN -->
+<main class="flex-1 overflow-hidden flex">
+
+    <!-- LEFT INFO PANEL -->
+    <aside class="w-[28%] bg-white border-r-2 border-navy overflow-y-auto custom-scroll p-6">
+
+        <h2 class="font-black text-lg mb-4 flex items-center gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-orange-500"></i>
+            Quiz Info
+        </h2>
+
+        <div class="space-y-4 text-sm font-bold">
+
+            <div class="p-4 bg-orange-50 border-2 border-navy rounded-2xl neo-shadow-sm">
+                Difficulty: <span th:text="${room.difficulty}"></span>
+            </div>
+
+            <div class="p-4 bg-blue-50 border-2 border-navy rounded-2xl neo-shadow-sm">
+                Level: <span th:text="${room.level}"></span>
+            </div>
+
+            <div class="p-4 bg-green-50 border-2 border-navy rounded-2xl neo-shadow-sm">
+                Room ID: <span th:text="${room.roomId}"></span>
+            </div>
+
+        </div>
+
+        <div class="mt-6">
+
+            <h3 class="font-black text-sm mb-3">PDF Preview</h3>
+
+            <div class="aspect-[3/4] border-2 border-navy rounded-2xl neo-shadow overflow-hidden">
+                <iframe th:src="${room.filePath}" class="w-full h-full"></iframe>
+            </div>
+
+        </div>
+
+    </aside>
+
+    <!-- QUIZ AREA -->
+    <section class="flex-1 overflow-y-auto custom-scroll p-10 bg-white">
+
+        <!-- HEADER -->
+        <div class="mb-10 text-center">
+
+            <h1 class="text-4xl font-black mb-3">
+                AI Generated <span class="text-orange-500">Quiz</span>
+            </h1>
+
+            <p class="text-gray-500 font-bold">
+                Answer all questions carefully before submitting
+            </p>
+
+        </div>
+
+        <!-- QUIZ CONTAINER -->
+        <div id="quizContainer" class="space-y-8"></div>
+
+        <!-- SUBMIT -->
+        <div class="mt-10 text-center">
+
+            <button onclick="submitQuiz()"
+                    class="bg-green-600 text-white px-10 py-4 rounded-2xl border-2 border-navy font-black text-lg neo-shadow hover:-translate-y-1 transition-all">
+                Submit Quiz
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+<script th:inline="javascript">
+
+    lucide.createIcons();
+
+    const quizJson = /*[[${quizJson}]]*/ "[]";
+    const roomId = /*[[${room.roomId}]]*/ "";
+
+    let quiz = [];
+    let answers = {};
+
+    const container = document.getElementById("quizContainer");
+
+    // ✅ SAFE JSON PARSE (prevents crash if backend sends bad JSON)
+    try {
+        quiz = JSON.parse(quizJson || "[]");
+    } catch (e) {
+        console.error("Invalid quiz JSON", e);
+        quiz = [];
+    }
+
+    function renderQuiz() {
+
+        container.innerHTML = "";
+
+        quiz.forEach((q, index) => {
+
+            const card = document.createElement("div");
+            card.className =
+                "p-6 rounded-3xl border-2 border-navy neo-shadow bg-gray-50 mb-8";
+
+            // ✅ Normalize options (supports ALL formats)
+            let options = [];
+
+            if (Array.isArray(q.options)) {
+                options = q.options;
+            } else if (typeof q.options === "object" && q.options !== null) {
+                options = Object.values(q.options);
+            }
+
+            let optionsHtml = "";
+
+            options.forEach((opt, i) => {
+
+                // ✅ handle object or string
+                let value = (typeof opt === "object")
+                    ? (opt.text || opt.option || opt.value || JSON.stringify(opt))
+                    : opt;
+
+                let label = value;
+
+                const inputId = `q${index}_${i}`;
+
+                optionsHtml += `
+                    <label for="${inputId}"
+                        class="flex items-center gap-3 p-4 bg-white border-2 border-navy rounded-xl neo-shadow-sm cursor-pointer hover:-translate-y-1 transition-all mt-3">
+
+                        <input
+                            type="radio"
+                            id="${inputId}"
+                            name="q${index}"
+                            value="${value}"
+                            onchange="answers['${index}']='${value}'"
+                        />
+
+                        <span class="font-bold text-sm">${label}</span>
+
+                    </label>
+                `;
+            });
+
+            card.innerHTML = `
+                <h3 class="font-black text-lg mb-4">
+                    Q${index + 1}. ${q.question || "Question missing"}
+                </h3>
+                ${optionsHtml}
+            `;
+
+            container.appendChild(card);
+        });
+    }
+
+async function submitQuiz() {
+
+    const payload = {
+        answers: answers,
+        timeTaken: 0
+    };
+
+    try {
+        const res = await fetch(`/submit-ai-quiz/${roomId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        console.log("SUBMIT RESPONSE:", data); // 🔥 DEBUG
+
+        if (data.status === "SUCCESS") {
+
+            // optional storage
+            localStorage.setItem("quizResult", JSON.stringify(data));
+
+            // ✅ FIXED REDIRECT (IMPORTANT)
+            window.location.href = `/quiz-result/${data.attemptId}`;
+
+        } else {
+            alert("❌ Submission failed!");
+        }
+
+    } catch (err) {
+        console.error("Submit error:", err);
+        alert("⚠️ Server error while submitting quiz");
+    }
+}
+
+    // 🚀 INIT
+    renderQuiz();
+
+</script>
+
+</body>
+</html>

@@ -3,6 +3,7 @@ package PDFquizAI.com.PDFquizAI.Controllers;
 
 import PDFquizAI.com.PDFquizAI.Entites.PdfFile;
 import PDFquizAI.com.PDFquizAI.Services.PdfFileService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -76,8 +77,24 @@ public class FileController {
     }
 
     @GetMapping("/viewer")
-    public String viewPdf(@RequestParam("file") String file, Model model) {
+    public String viewPdf(
+            @RequestParam("file") String file,
+            HttpSession session,
+            Model model) {
+
+        // protect route
+        if (session.getAttribute("email") == null) {
+            return "redirect:/auth";
+        }
+
+        // pdf path
         model.addAttribute("filePath", "/uploads/" + file);
+
+        // user details
+        model.addAttribute("name", session.getAttribute("name"));
+        model.addAttribute("email", session.getAttribute("email"));
+        model.addAttribute("picture", session.getAttribute("picture"));
+
         return "quiz-viewer";
     }
 }

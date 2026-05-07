@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <title>Quiz Result | Pdf-To-Quiz AI</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --navy: #000080;
+            --green: #138808;
+            --saffron: #FF9933;
+            --bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--navy);
+        }
+
+        .card {
+            background: white;
+            border: 2px solid var(--navy);
+            border-radius: 16px;
+            box-shadow: 3px 3px 0 var(--navy);
+        }
+
+        .subtitle {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            opacity: 0.6;
+            letter-spacing: 1px;
+        }
+
+        .btn {
+            border: 2px solid var(--navy);
+            font-weight: 900;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--green);
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="h-screen overflow-hidden flex">
+
+<!-- ================= LEFT SIDEBAR ================= -->
+<aside class="w-[30%] bg-white border-r-2 border-navy overflow-y-auto p-5">
+
+    <h1 class="text-2xl font-black mb-6 text-green-600">Analytics</h1>
+
+    <!-- SCORE -->
+    <div class="card p-4 mb-4 text-center">
+        <p class="subtitle">Score</p>
+        <h2 class="text-3xl font-black text-green-600"
+            th:text="${attempt.score + '%'}">0%</h2>
+    </div>
+
+    <!-- CORRECT / WRONG -->
+    <div class="grid grid-cols-2 gap-3 mb-6">
+
+        <div class="card p-3 text-center">
+            <p class="subtitle">Correct</p>
+            <h2 class="text-xl font-black"
+                th:text="${attempt.correctAnswers}">0</h2>
+        </div>
+
+        <div class="card p-3 text-center">
+            <p class="subtitle">Wrong</p>
+            <h2 class="text-xl font-black text-red-500"
+                th:text="${attempt.wrongAnswers}">0</h2>
+        </div>
+
+    </div>
+
+    <!-- CHARTS -->
+    <div class="card p-4 mb-5">
+        <h2 class="subtitle mb-3">Performance</h2>
+        <canvas id="barChart"></canvas>
+    </div>
+
+    <div class="card p-4">
+        <h2 class="subtitle mb-3">Accuracy Split</h2>
+        <canvas id="pieChart"></canvas>
+    </div>
+
+</aside>
+
+<!-- ================= MAIN ================= -->
+<main class="flex-1 overflow-y-auto p-8">
+
+    <!-- HEADER -->
+    <div class="mb-6">
+        <h1 class="text-4xl font-black text-green-600">Quiz Review</h1>
+        <p class="subtitle">Answer breakdown & explanations</p>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="card p-5 flex justify-between items-center mb-8">
+
+        <div>
+            <p class="subtitle">Time Taken</p>
+            <p class="text-xl font-black"
+               th:text="${attempt.timeTakenSeconds + ' sec'}">0 sec</p>
+        </div>
+
+        <div>
+            <p class="subtitle">Accuracy</p>
+            <p class="text-xl font-black text-green-600"
+               th:text="${attempt.score + '%'}">0%</p>
+        </div>
+
+    </div>
+
+    <!-- QUESTIONS -->
+    <div class="space-y-6">
+
+        <div th:each="r, iter : ${review}" class="card p-5">
+
+            <div class="flex justify-between items-center mb-4">
+
+                <h3 class="font-black text-lg"
+                    th:text="'Q' + ${iter.index + 1} + ': ' + ${r.question}">
+                </h3>
+
+                <span th:if="${r.isCorrect}"
+                      class="text-green-700 font-black text-xs">CORRECT</span>
+
+                <span th:unless="${r.isCorrect}"
+                      class="text-red-600 font-black text-xs">WRONG</span>
+
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 text-sm">
+
+                <div>
+                    <p class="subtitle">Your Answer</p>
+                    <p class="font-bold" th:text="${r.userAnswer}"></p>
+                </div>
+
+                <div>
+                    <p class="subtitle">Correct Answer</p>
+                    <p class="font-bold text-green-700"
+                       th:text="${r.correctAnswer}">
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="mt-4 text-sm text-gray-600">
+                <p th:text="${r.explanation}"></p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="mt-10 flex gap-4">
+
+        <a th:href="@{'/quiz/store/' + ${room.roomId}}"
+           class="btn btn-success">
+            💾 Store for Study
+        </a>
+
+        <a th:href="@{'/quiz/close/' + ${room.roomId}}"
+           onclick="return confirm('Close room?')"
+           class="btn btn-danger">
+            🗑 Close Room
+        </a>
+
+    </div>
+
+</main>
+
+<!-- ================= CHART JS ================= -->
+<script th:inline="javascript">
+
+    lucide.createIcons();
+
+    const correct = /*[[${attempt.correctAnswers}]]*/ 0;
+    const wrong = /*[[${attempt.wrongAnswers}]]*/ 0;
+
+    // BAR
+    new Chart(document.getElementById("barChart"), {
+        type: "bar",
+        data: {
+            labels: ["Correct", "Wrong"],
+            datasets: [{
+                data: [correct, wrong],
+                backgroundColor: ["#138808", "#ef4444"],
+                borderColor: "#000080",
+                borderWidth: 2
+            }]
+        },
+        options: {
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+
+    // PIE
+    new Chart(document.getElementById("pieChart"), {
+        type: "doughnut",
+        data: {
+            labels: ["Correct", "Wrong"],
+            datasets: [{
+                data: [correct, wrong],
+                backgroundColor: ["#138808", "#ef4444"],
+                borderColor: "#000080",
+                borderWidth: 2
+            }]
+        },
+        options: {
+            cutout: "65%",
+            plugins: { legend: { position: "bottom" } }
+        }
+    });
+
+</script>
+
+</body>
+</html>

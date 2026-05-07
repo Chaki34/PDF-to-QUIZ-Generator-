@@ -56,14 +56,25 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         // 💾 Save user in DB
         userRepo.save(user);
 
-        // 🔐 SESSION SETUP (FIXED — this was your main issue)
+
+        // 🔐 SESSION SETUP
         HttpSession session = request.getSession();
+
+// IMPORTANT
+        session.setAttribute("loggedUser", user);
+
+// USER DATA
         session.setAttribute("email", user.getEmail());
+
         session.setAttribute("name", user.getName());
+
         session.setAttribute("picture", user.getPictureUrl());
 
-        session.setAttribute("loggedIn", false);   // 🔥 IMPORTANT FIX
-        session.setAttribute("onboarding", true);
+// LOGIN STATUS
+        session.setAttribute("loggedIn", true);
+
+// ONBOARDING
+        session.setAttribute("onboarding", false);
 
         // 🔥 DEBUG LOG (remove later in production)
         System.out.println("✅ OAuth SUCCESS: " + email);
