@@ -90,6 +90,142 @@
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scroll::-webkit-scrollbar-thumb:hover { background: var(--navy); }
+
+
+        /* =========================
+   RESPONSIVE FIX (FULL)
+   ========================= */
+
+/* Base safety */
+img, iframe {
+    max-width: 100%;
+}
+
+/* =========================
+   MOBILE (≤ 640px)
+   ========================= */
+@media (max-width: 640px) {
+
+    body {
+        overflow: auto !important;
+        height: auto !important;
+    }
+
+    /* STACK MAIN LAYOUT */
+    main {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+
+    /* SIDEBAR → FULL WIDTH */
+    aside {
+        width: 100% !important;
+        height: auto !important;
+        border-right: none !important;
+        border-bottom: 2px solid var(--navy);
+    }
+
+    /* CONTENT */
+    section {
+        width: 100% !important;
+    }
+
+    /* NAVBAR STACK */
+    nav {
+        flex-direction: column !important;
+        gap: 10px !important;
+        text-align: center;
+    }
+
+    /* GRID FIX */
+    .grid.grid-cols-3 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* JOIN ROOM STACK */
+    .flex.w-full.md\:w-auto {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    /* ROOM CARDS */
+    .room-card {
+        height: auto !important;
+    }
+
+    /* INPUTS */
+    .custom-input {
+        font-size: 14px !important;
+        padding: 12px !important;
+    }
+
+    /* BUTTONS */
+    .main-btn {
+        font-size: 14px !important;
+        padding: 12px !important;
+    }
+
+    /* HEADER TEXT */
+    h1 {
+        font-size: 2rem !important;
+    }
+
+    /* PDF FIX */
+    iframe {
+        height: 220px !important;
+    }
+
+    /* SIDEBAR SCROLL REMOVE */
+    .custom-scroll {
+        overflow: visible !important;
+    }
+}
+
+/* =========================
+   TABLET (641px - 1024px)
+   ========================= */
+@media (min-width: 641px) and (max-width: 1024px) {
+
+    main {
+        flex-direction: column !important;
+    }
+
+    aside {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 2px solid var(--navy);
+    }
+
+    section {
+        width: 100% !important;
+    }
+
+    /* 2 COLUMN GRID */
+    .grid.grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* PDF HEIGHT */
+    iframe {
+        height: 320px !important;
+    }
+}
+
+/* =========================
+   LARGE SCREEN SAFETY
+   ========================= */
+@media (min-width: 1025px) {
+
+    aside {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+    }
+
+    section {
+        min-height: 100vh;
+    }
+}
     </style>
 </head>
 
@@ -171,14 +307,30 @@
         </div>
 
         <!-- 2. PDF SECTION -->
+        <!-- PDF Section -->
         <div class="p-6 border-b-2 border-navy">
+
             <div class="flex items-center gap-2 mb-4">
                 <i data-lucide="file-text" class="w-4 h-4 text-orange-500"></i>
-                <h3 class="text-[11px] font-black uppercase tracking-widest">Current Document</h3>
+                <h3 class="text-[11px] font-black uppercase tracking-widest">
+                    Current Document
+                </h3>
             </div>
-            <div class="aspect-[3/4] rounded-2xl border-2 border-navy neo-shadow bg-gray-100 overflow-hidden">
+
+            <!-- Desktop / Tablet PDF -->
+            <div class="hidden sm:block aspect-[3/4] rounded-2xl border-2 border-navy neo-shadow bg-gray-100 overflow-hidden">
                 <iframe th:src="${filePath}" class="w-full h-full"></iframe>
             </div>
+
+            <!-- Mobile Button -->
+            <div class="block sm:hidden">
+                <a th:href="${filePath}" target="_blank"
+                   class="w-full bg-navy text-white py-4 rounded-2xl border-2 border-navy neo-shadow-sm font-black flex items-center justify-center gap-2">
+                    <i data-lucide="external-link" class="w-5 h-5"></i>
+                    Open PDF
+                </a>
+            </div>
+
         </div>
 
         <!-- 3. RULES SECTION -->

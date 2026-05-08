@@ -57,6 +57,140 @@
             background: var(--navy);
         }
 
+
+        /* =========================
+   RESPONSIVE FIX - SOLO AI ROOM
+   ========================= */
+
+/* Safety */
+img, iframe {
+    max-width: 100%;
+}
+
+/* =========================
+   MOBILE (≤ 640px)
+   ========================= */
+@media (max-width: 640px) {
+
+    body {
+        overflow: auto !important;
+        height: auto !important;
+    }
+
+    /* STACK MAIN LAYOUT */
+    main {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+
+    /* SIDEBAR FULL WIDTH */
+    aside {
+        width: 100% !important;
+        height: auto !important;
+        border-right: none !important;
+        border-bottom: 2px solid var(--navy);
+    }
+
+    /* MAIN CONTENT */
+    section {
+        width: 100% !important;
+    }
+
+    /* NAVBAR STACK */
+    nav {
+        flex-direction: column !important;
+        gap: 10px !important;
+        text-align: center;
+    }
+
+    /* HERO TEXT */
+    h1 {
+        font-size: 2rem !important;
+        line-height: 1.2 !important;
+    }
+
+    /* GRID → SINGLE COLUMN */
+    .grid.grid-cols-3 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* ROOM STATUS CARDS */
+    .grid.grid-cols-3 > div {
+        width: 100% !important;
+    }
+
+    /* BUTTON AREA */
+    .bg-green-600.text-white.px-10 {
+        width: 100% !important;
+        font-size: 14px !important;
+        padding: 14px !important;
+    }
+
+    /* PDF FIX */
+    iframe {
+        height: 220px !important;
+    }
+
+    /* SIDEBAR SCROLL FIX */
+    .custom-scroll {
+        overflow: visible !important;
+    }
+
+    /* TEXT SCALE DOWN */
+    h2 {
+        font-size: 1.5rem !important;
+    }
+
+    p {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* =========================
+   TABLET (641px - 1024px)
+   ========================= */
+@media (min-width: 641px) and (max-width: 1024px) {
+
+    main {
+        flex-direction: column !important;
+    }
+
+    aside {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 2px solid var(--navy);
+    }
+
+    section {
+        width: 100% !important;
+    }
+
+    /* 2 COLUMN GRID */
+    .grid.grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    iframe {
+        height: 320px !important;
+    }
+}
+
+/* =========================
+   LARGE SCREEN FIX
+   ========================= */
+@media (min-width: 1025px) {
+
+    aside {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+    }
+
+    section {
+        min-height: 100vh;
+    }
+}
+
     </style>
 
 </head>

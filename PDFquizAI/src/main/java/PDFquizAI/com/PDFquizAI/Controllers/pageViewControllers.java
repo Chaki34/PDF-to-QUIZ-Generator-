@@ -3,17 +3,22 @@ package PDFquizAI.com.PDFquizAI.Controllers;
 import PDFquizAI.com.PDFquizAI.Entites.PdfFile;
 import PDFquizAI.com.PDFquizAI.Entites.QuizAttempt;
 import PDFquizAI.com.PDFquizAI.Entites.User;
+import PDFquizAI.com.PDFquizAI.Repos.QuizAttemptRepository;
 import PDFquizAI.com.PDFquizAI.Repos.UserRepository;
 import PDFquizAI.com.PDFquizAI.Services.PdfFileService;
 import PDFquizAI.com.PDFquizAI.Services.QuizAttemptService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class pageViewControllers {
@@ -22,11 +27,14 @@ public class pageViewControllers {
 
   private final QuizAttemptService  quizAttemptService;
 
+  private final QuizAttemptRepository   quizAttemptRepository;
+
   private final UserRepository  userRepository;
 
-    public pageViewControllers(PdfFileService pdfFileService, QuizAttemptService quizAttemptService, UserRepository userRepository) {
+    public pageViewControllers(PdfFileService pdfFileService, QuizAttemptService quizAttemptService, QuizAttemptRepository quizAttemptRepository, UserRepository userRepository) {
         this.pdfFileService = pdfFileService;
         this.quizAttemptService = quizAttemptService;
+        this.quizAttemptRepository = quizAttemptRepository;
         this.userRepository = userRepository;
     }
 
@@ -123,21 +131,39 @@ public class pageViewControllers {
   }
 
   @GetMapping("/library")
-  public String pdfLibrary(Model model) {
+  public String pdfLibrary(Model model, HttpSession session) {
 
-    Long userId = 1L;
+    String email = (String) session.getAttribute("email");
+
+    if (email == null) {
+      return "redirect:/auth";
+    }
+
+    User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found: " + email));
+
+    Long userId = user.getId();
+
+    // 🔥 DEBUG (remove later)
+    System.out.println("LIBRARY USER ID = " + userId);
 
     List<PdfFile> pdfList = pdfFileService.getUserFiles(userId);
 
-    // NEW: fetch all attempts for user
-    List<QuizAttempt> attempts = quizAttemptService.getRecentByUser(userId);
+    // 🔥 IMPORTANT: avoid N+1 + null safety
+    if (pdfList != null) {
+      for (PdfFile pdf : pdfList) {
+
+        List<QuizAttempt> attempts =
+                quizAttemptRepository.findByPdfFileId(pdf.getId());
+
+        pdf.setAttempts(attempts);
+      }
+    }
 
     model.addAttribute("pdfList", pdfList);
-    model.addAttribute("attempts", attempts);
 
     return "pdf-library";
   }
-
   @GetMapping("/room-types")
   public String roomtypeView(
 
@@ -170,6 +196,12 @@ public class pageViewControllers {
 
     return "select-quiz-room-type";
   }
+
+//  private Long resolveUserId(String email) {
+//    // TEMP SIMPLE FIX (replace later with DB lookup)
+//    return Math.abs(email.hashCode() % 10000L);
+//  }
+
 
 
 

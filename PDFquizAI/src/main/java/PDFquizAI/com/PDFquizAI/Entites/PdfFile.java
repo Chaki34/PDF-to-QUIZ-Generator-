@@ -26,7 +26,12 @@ public class PdfFile {
 
     private LocalDateTime uploadedAt = LocalDateTime.now();
 
-    private Long userId;
+//    private Long userId;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "pdfFile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<QuizAttempt> attempts = new ArrayList<>();

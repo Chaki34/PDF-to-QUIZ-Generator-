@@ -1,30 +1,208 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Generating Quiz...</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Generating Quiz | Pdf-To-Quiz AI</title>
+
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font (same as login page) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Model Viewer -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
+
+    <style>
+        :root {
+            --saffron: #FF9933;
+            --green: #138808;
+            --navy: #000080;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7;
+            background-image: radial-gradient(var(--navy) 0.7px, transparent 0.7px);
+            background-size: 26px 26px;
+            color: var(--navy);
+        }
+
+        .border-navy { border: 4px solid var(--navy); }
+
+        .neo-shadow { box-shadow: 10px 10px 0px 0px var(--navy); }
+
+        /* Robot float */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Pulse glow */
+        @keyframes pulse {
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
+        }
+
+        .pulse {
+            animation: pulse 1.5s infinite;
+        }
+
+        /* Loading bars */
+        .bar {
+            height: 8px;
+            background: #e5e7eb;
+            border: 3px solid var(--navy);
+            overflow: hidden;
+        }
+
+        .bar > div {
+            height: 100%;
+            background: var(--saffron);
+            animation: load 1.5s infinite ease-in-out;
+        }
+
+        @keyframes load {
+            0% { width: 10%; }
+            50% { width: 80%; }
+            100% { width: 20%; }
+        }
+    </style>
 </head>
-<body style="text-align:center; margin-top:100px;">
 
-<h2>Generating your AI Quiz...</h2>
-<p>Please wait while we prepare your questions</p>
+<body class="min-h-screen flex items-center justify-center p-4">
 
-<div id="status">Checking status...</div>
+<!-- MAIN CARD -->
+<div class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 bg-white border-navy neo-shadow rounded-[40px] overflow-hidden">
 
+    <!-- LEFT: ROBOT PANEL -->
+    <div class="flex flex-col border-b-4 lg:border-b-0 lg:border-r-4 border-navy">
+
+        <div class="flex-1 flex items-center justify-center p-6 bg-white">
+
+            <model-viewer id="robot"
+                          src="https://modelviewer.dev/shared-assets/models/RobotExpressive.glb"
+                          autoplay
+                          animation-name="Walking"
+                          camera-controls
+                          disable-zoom
+                          class="w-full h-[380px] float">
+            </model-viewer>
+
+        </div>
+
+        <div class="bg-navy text-white text-center p-6">
+
+            <p class="text-[10px] uppercase tracking-widest text-saffron font-black">
+                Pdf-To-Quiz AI
+            </p>
+
+            <h2 id="statusText" class="text-xl font-bold mt-2 pulse">
+                Generating your AI Quiz...
+            </h2>
+
+            <p class="text-xs opacity-70 mt-2">
+                AI is analyzing your PDF document
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT: STATUS PANEL -->
+    <div class="p-8 md:p-12 flex flex-col justify-center">
+
+        <!-- HEADER -->
+        <div class="text-center mb-10">
+
+            <div class="inline-block bg-saffron text-white px-3 py-1 text-[10px] font-black uppercase border-2 border-navy">
+                AI ENGINE RUNNING
+            </div>
+
+            <h1 class="text-4xl md:text-5xl font-black mt-4">
+                Pdf To <span class="text-saffron">Quiz AI</span>
+            </h1>
+
+            <p class="text-gray-600 font-semibold mt-3">
+                We are preparing intelligent MCQs from your PDF
+            </p>
+
+        </div>
+
+        <!-- STATUS BOX -->
+        <div class="border-navy neo-shadow p-6 bg-gray-50 text-center">
+
+            <p class="text-xs font-black uppercase text-gray-500 mb-2">
+                Current Status
+            </p>
+
+            <div id="status" class="text-lg font-bold">
+                Connecting AI engine...
+            </div>
+
+            <p class="text-xs text-gray-500 mt-3">
+                Please wait, this may take a few seconds
+            </p>
+
+        </div>
+
+        <!-- LOADING BARS -->
+        <div class="mt-8 space-y-3">
+
+            <div class="bar"><div></div></div>
+            <div class="bar"><div style="background: var(--green)"></div></div>
+            <div class="bar"><div style="background: var(--navy)"></div></div>
+
+        </div>
+
+        <!-- TIP -->
+        <div class="mt-10 text-center text-xs text-gray-500 font-semibold">
+            💡 AI is generating questions, difficulty mapping & answers
+        </div>
+
+    </div>
+
+</div>
+
+<!-- SCRIPT (UNCHANGED BACKEND LOGIC) -->
 <script>
+
     const roomId = "[[${roomId}]]";
 
+    const robot = document.getElementById("robot");
+    const statusText = document.getElementById("statusText");
+
+    function celebrate() {
+        robot.animationName = "Jump";
+        statusText.innerText = "Quiz Ready! Redirecting...";
+    }
+
     async function checkStatus() {
+
         const res = await fetch(`/api/quiz/status/${roomId}`);
         const data = await res.json();
 
         document.getElementById("status").innerText = data.status;
 
         if (data.status === "READY") {
-            window.location.href = `/play-quiz/${roomId}`;
+
+            celebrate();
+
+            setTimeout(() => {
+                window.location.href = `/play-quiz/${roomId}`;
+            }, 1200);
         }
     }
 
     setInterval(checkStatus, 2000);
+
 </script>
 
 </body>

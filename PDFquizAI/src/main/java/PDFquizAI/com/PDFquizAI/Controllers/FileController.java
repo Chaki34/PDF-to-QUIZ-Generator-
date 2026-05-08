@@ -2,6 +2,8 @@ package PDFquizAI.com.PDFquizAI.Controllers;
 
 
 import PDFquizAI.com.PDFquizAI.Entites.PdfFile;
+import PDFquizAI.com.PDFquizAI.Entites.User;
+import PDFquizAI.com.PDFquizAI.Repos.UserRepository;
 import PDFquizAI.com.PDFquizAI.Services.PdfFileService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -22,12 +24,16 @@ public class FileController {
 
     private final PdfFileService pdfFileService;
 
-    public FileController(PdfFileService pdfFileService) {
+    private final UserRepository userRepository;
+
+    public FileController(PdfFileService pdfFileService, UserRepository userRepository) {
         this.pdfFileService = pdfFileService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/upload")
     public String uploadPdf(@RequestParam("pdfFile") MultipartFile file,
+                            HttpSession session,
                             Model model) {
 
         if (file.isEmpty()) {
@@ -36,6 +42,16 @@ public class FileController {
         }
 
         try {
+            // 🔐 GET USER FROM SESSION
+            String email = (String) session.getAttribute("email");
+
+            if (email == null) {
+                return "redirect:/auth";
+            }
+
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
             // file names
             String originalName = file.getOriginalFilename();
             String fileName = System.currentTimeMillis() + "_" + originalName;
@@ -51,15 +67,14 @@ public class FileController {
             // save file
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
-            // 🧠 SAVE TO DATABASE (IMPORTANT PART)
+            // 🧠 SAVE TO DATABASE
             PdfFile pdf = new PdfFile();
             pdf.setFileName(fileName);
             pdf.setOriginalName(originalName);
             pdf.setFilePath(filePath.toString());
 
-            // 🔐 TEMP USER ID (replace with login user later)
-            Long userId = 1L; // 👉 replace with Spring Security user
-            pdf.setUserId(userId);
+            // 🔥 FIX HERE (IMPORTANT)
+            pdf.setUser(user);   // ✅ correct mapping
 
             pdf.setUploadedAt(LocalDateTime.now());
 
@@ -75,7 +90,6 @@ public class FileController {
             return "index";
         }
     }
-
     @GetMapping("/viewer")
     public String viewPdf(
             @RequestParam("file") String file,

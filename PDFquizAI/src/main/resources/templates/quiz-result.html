@@ -2,8 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Quiz Result | Pdf-To-Quiz AI</title>
 
@@ -55,6 +55,9 @@
             border-radius: 12px;
             cursor: pointer;
             transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .btn:hover {
@@ -70,149 +73,135 @@
             background: var(--green);
             color: white;
         }
+
+        /* Fix for charts to ensure they don't grow infinitely */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+        }
     </style>
 </head>
 
-<body class="h-screen overflow-hidden flex">
+<body class="min-h-screen flex flex-col md:flex-row">
 
-<!-- ================= LEFT SIDEBAR ================= -->
-<aside class="w-[30%] bg-white border-r-2 border-navy overflow-y-auto p-5">
+<!-- ================= LEFT SIDEBAR (Stacks on mobile, Sidebar on desktop) ================= -->
+<aside class="w-full md:w-[350px] lg:w-[30%] bg-white border-b-2 md:border-b-0 md:border-r-2 border-navy p-5 md:h-screen md:sticky md:top-0 md:overflow-y-auto">
 
     <h1 class="text-2xl font-black mb-6 text-green-600">Analytics</h1>
 
     <!-- SCORE -->
     <div class="card p-4 mb-4 text-center">
         <p class="subtitle">Score</p>
-        <h2 class="text-3xl font-black text-green-600"
-            th:text="${attempt.score + '%'}">0%</h2>
+        <h2 class="text-3xl font-black text-green-600" th:text="${attempt.score + '%'}">0%</h2>
     </div>
 
     <!-- CORRECT / WRONG -->
     <div class="grid grid-cols-2 gap-3 mb-6">
-
         <div class="card p-3 text-center">
             <p class="subtitle">Correct</p>
-            <h2 class="text-xl font-black"
-                th:text="${attempt.correctAnswers}">0</h2>
+            <h2 class="text-xl font-black" th:text="${attempt.correctAnswers}">0</h2>
         </div>
-
         <div class="card p-3 text-center">
             <p class="subtitle">Wrong</p>
-            <h2 class="text-xl font-black text-red-500"
-                th:text="${attempt.wrongAnswers}">0</h2>
+            <h2 class="text-xl font-black text-red-500" th:text="${attempt.wrongAnswers}">0</h2>
         </div>
-
     </div>
 
     <!-- CHARTS -->
-    <div class="card p-4 mb-5">
-        <h2 class="subtitle mb-3">Performance</h2>
-        <canvas id="barChart"></canvas>
-    </div>
+    <div class="space-y-4">
+        <div class="card p-4">
+            <h2 class="subtitle mb-3">Performance</h2>
+            <div class="chart-container">
+                <canvas id="barChart"></canvas>
+            </div>
+        </div>
 
-    <div class="card p-4">
-        <h2 class="subtitle mb-3">Accuracy Split</h2>
-        <canvas id="pieChart"></canvas>
+        <div class="card p-4">
+            <h2 class="subtitle mb-3">Accuracy Split</h2>
+            <div class="chart-container">
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
     </div>
-
 </aside>
 
-<!-- ================= MAIN ================= -->
-<main class="flex-1 overflow-y-auto p-8">
+<!-- ================= MAIN CONTENT ================= -->
+<main class="flex-1 p-4 md:p-8 lg:p-12 overflow-x-hidden">
 
     <!-- HEADER -->
     <div class="mb-6">
-        <h1 class="text-4xl font-black text-green-600">Quiz Review</h1>
+        <h1 class="text-3xl md:text-4xl font-black text-green-600">Quiz Review</h1>
         <p class="subtitle">Answer breakdown & explanations</p>
     </div>
 
-    <!-- SUMMARY -->
-    <div class="card p-5 flex justify-between items-center mb-8">
-
+    <!-- SUMMARY BAR -->
+    <div class="card p-5 flex flex-row justify-between items-center mb-8 gap-4">
         <div>
             <p class="subtitle">Time Taken</p>
-            <p class="text-xl font-black"
-               th:text="${attempt.timeTakenSeconds + ' sec'}">0 sec</p>
+            <p class="text-lg md:text-xl font-black" th:text="${attempt.timeTakenSeconds + ' sec'}">0 sec</p>
         </div>
-
-        <div>
+        <div class="text-right">
             <p class="subtitle">Accuracy</p>
-            <p class="text-xl font-black text-green-600"
-               th:text="${attempt.score + '%'}">0%</p>
+            <p class="text-lg md:text-xl font-black text-green-600" th:text="${attempt.score + '%'}">0%</p>
         </div>
-
     </div>
 
     <!-- QUESTIONS -->
     <div class="space-y-6">
-
         <div th:each="r, iter : ${review}" class="card p-5">
-
-            <div class="flex justify-between items-center mb-4">
-
-                <h3 class="font-black text-lg"
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+                <h3 class="font-black text-base md:text-lg leading-tight"
                     th:text="'Q' + ${iter.index + 1} + ': ' + ${r.question}">
                 </h3>
-
-                <span th:if="${r.isCorrect}"
-                      class="text-green-700 font-black text-xs">CORRECT</span>
-
-                <span th:unless="${r.isCorrect}"
-                      class="text-red-600 font-black text-xs">WRONG</span>
-
+                <span th:if="${r.isCorrect}" class="bg-green-100 text-green-700 px-2 py-1 rounded border border-green-700 font-black text-[10px] whitespace-nowrap">CORRECT</span>
+                <span th:unless="${r.isCorrect}" class="bg-red-100 text-red-600 px-2 py-1 rounded border border-red-600 font-black text-[10px] whitespace-nowrap">WRONG</span>
             </div>
 
-            <div class="grid grid-cols-2 gap-4 text-sm">
-
-                <div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                <div class="p-3 bg-gray-50 rounded-lg border border-dashed border-gray-300">
                     <p class="subtitle">Your Answer</p>
-                    <p class="font-bold" th:text="${r.userAnswer}"></p>
+                    <p class="font-bold break-words" th:text="${r.userAnswer}"></p>
                 </div>
-
-                <div>
-                    <p class="subtitle">Correct Answer</p>
-                    <p class="font-bold text-green-700"
-                       th:text="${r.correctAnswer}">
-                    </p>
+                <div class="p-3 bg-green-50 rounded-lg border border-dashed border-green-300">
+                    <p class="subtitle text-green-700">Correct Answer</p>
+                    <p class="font-bold text-green-700 break-words" th:text="${r.correctAnswer}"></p>
                 </div>
-
             </div>
 
-            <div class="mt-4 text-sm text-gray-600">
+            <div class="mt-4 text-sm text-gray-600 bg-slate-50 p-3 rounded-lg italic border-l-4 border-navy">
                 <p th:text="${r.explanation}"></p>
             </div>
-
         </div>
-
     </div>
 
     <!-- ACTION BUTTONS -->
-    <div class="mt-10 flex gap-4">
-
-        <a th:href="@{'/quiz/store/' + ${room.roomId}}"
-           class="btn btn-success">
+    <div class="mt-10 flex flex-col sm:flex-row gap-4 mb-10">
+        <a th:href="@{'/quiz/store/' + ${room.roomId}}" class="btn btn-success w-full sm:w-auto">
             💾 Store for Study
         </a>
-
-        <a th:href="@{'/quiz/close/' + ${room.roomId}}"
-           onclick="return confirm('Close room?')"
-           class="btn btn-danger">
+        <a th:href="@{'/quiz/close/' + ${room.roomId}}" onclick="return confirm('Close room?')" class="btn btn-danger w-full sm:w-auto">
             🗑 Close Room
         </a>
-
     </div>
 
 </main>
 
 <!-- ================= CHART JS ================= -->
 <script th:inline="javascript">
-
     lucide.createIcons();
 
-    const correct = /*[[${attempt.correctAnswers}]]*/ 0;
-    const wrong = /*[[${attempt.wrongAnswers}]]*/ 0;
+    // Use placeholders if Thymeleaf variables are empty
+    const correct = /*[[${attempt.correctAnswers}]]*/ 5;
+    const wrong = /*[[${attempt.wrongAnswers}]]*/ 2;
 
-    // BAR
+    // Common Chart Options
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: true,
+    };
+
+    // BAR CHART
     new Chart(document.getElementById("barChart"), {
         type: "bar",
         data: {
@@ -225,12 +214,13 @@
             }]
         },
         options: {
+            ...chartOptions,
             plugins: { legend: { display: false } },
-            scales: { y: { beginAtZero: true } }
+            scales: { y: { beginAtZero: true, grid: { display: false } } }
         }
     });
 
-    // PIE
+    // PIE CHART
     new Chart(document.getElementById("pieChart"), {
         type: "doughnut",
         data: {
@@ -243,12 +233,11 @@
             }]
         },
         options: {
+            ...chartOptions,
             cutout: "65%",
-            plugins: { legend: { position: "bottom" } }
+            plugins: { legend: { position: "bottom", labels: { font: { weight: '800', size: 10 } } } }
         }
     });
-
 </script>
-
 </body>
 </html>

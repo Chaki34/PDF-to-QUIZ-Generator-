@@ -11,4 +11,8 @@ import java.util.List;
 public interface PdfFileRepository extends JpaRepository<PdfFile, Long> {
 
     List<PdfFile> findByUserId(Long userId);
+
+    List<PdfFile> findByUser_Id(Long userId);
+
+
 }

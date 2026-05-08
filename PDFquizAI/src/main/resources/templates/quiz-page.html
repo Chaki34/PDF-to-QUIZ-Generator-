@@ -43,6 +43,132 @@
             background: #cbd5e1;
             border-radius: 10px;
         }
+
+        /* =========================
+   RESPONSIVE FIX - QUIZ PAGE
+   ========================= */
+
+/* Safety */
+img, iframe {
+    max-width: 100%;
+}
+
+/* =========================
+   MOBILE (≤ 640px)
+   ========================= */
+@media (max-width: 640px) {
+
+    body {
+        overflow: auto !important;
+        height: auto !important;
+    }
+
+    /* STACK MAIN LAYOUT */
+    main {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+
+    /* LEFT SIDEBAR FULL WIDTH */
+    aside {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 2px solid var(--navy);
+        height: auto !important;
+    }
+
+    /* QUIZ SECTION FULL WIDTH */
+    section {
+        width: 100% !important;
+        padding: 20px !important;
+    }
+
+    /* HEADER TEXT */
+    h1 {
+        font-size: 1.8rem !important;
+        line-height: 1.2 !important;
+    }
+
+    /* QUESTION CARD */
+    .p-6.rounded-3xl {
+        padding: 16px !important;
+    }
+
+    /* OPTIONS STACK */
+    label.flex {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+        padding: 12px !important;
+    }
+
+    /* RADIO BUTTON TEXT */
+    span.font-bold {
+        font-size: 13px !important;
+    }
+
+    /* SUBMIT BUTTON */
+    button {
+        width: 100% !important;
+        font-size: 14px !important;
+        padding: 14px !important;
+    }
+
+    /* PDF SMALLER */
+    iframe {
+        height: 220px !important;
+    }
+
+    /* REMOVE FIXED HEIGHT SCROLL ISSUES */
+    .custom-scroll {
+        overflow: visible !important;
+    }
+}
+
+/* =========================
+   TABLET (641px - 1024px)
+   ========================= */
+@media (min-width: 641px) and (max-width: 1024px) {
+
+    main {
+        flex-direction: column !important;
+    }
+
+    aside {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 2px solid var(--navy);
+    }
+
+    section {
+        width: 100% !important;
+        padding: 30px !important;
+    }
+
+    iframe {
+        height: 320px !important;
+    }
+
+    h1 {
+        font-size: 2.2rem !important;
+    }
+}
+
+/* =========================
+   LARGE SCREEN FIX
+   ========================= */
+@media (min-width: 1025px) {
+
+    aside {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+    }
+
+    section {
+        min-height: 100vh;
+    }
+}
     </style>
 </head>
 

@@ -36,6 +36,134 @@
             color: white;
             border-color: var(--navy);
         }
+
+        /* =========================
+   FULL RESPONSIVE FIX
+   ========================= */
+
+/* Mobile */
+@media (max-width: 640px) {
+
+    body {
+        overflow: auto !important;
+        height: auto !important;
+    }
+
+    /* MAIN LAYOUT → STACK */
+    main {
+        flex-direction: column !important;
+        height: auto !important;
+    }
+
+    /* LEFT SIDEBAR */
+    aside {
+        width: 100% !important;
+        height: auto !important;
+        border-right: none !important;
+        border-bottom: 2px solid var(--navy);
+    }
+
+    /* RIGHT SECTION */
+    section {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    /* HEADER NAV */
+    nav {
+        flex-direction: column !important;
+        gap: 10px !important;
+        text-align: center;
+    }
+
+    nav .flex {
+        justify-content: center !important;
+        flex-wrap: wrap;
+    }
+
+    /* PROFILE GRID */
+    aside .grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* PDF PREVIEW */
+    iframe {
+        height: 220px !important;
+    }
+
+    /* TITLE */
+    h2 {
+        font-size: 1.8rem !important;
+    }
+
+    /* CRITERIA SECTION */
+    #criteria-section {
+        padding: 20px !important;
+    }
+
+    /* DIFFICULTY BUTTONS STACK */
+    .flex.gap-6 {
+        flex-direction: column !important;
+    }
+
+    /* LEVEL GRID → 2 COL */
+    .grid.grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    /* CATEGORY GRID → 1 COL */
+    .grid.grid-cols-2 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* BIG BUTTON */
+    button {
+        font-size: 1rem !important;
+        padding: 14px !important;
+    }
+}
+
+/* Tablets */
+@media (min-width: 641px) and (max-width: 1024px) {
+
+    main {
+        flex-direction: column !important;
+    }
+
+    aside {
+        width: 100% !important;
+        border-right: none !important;
+        border-bottom: 2px solid var(--navy);
+    }
+
+    section {
+        width: 100% !important;
+    }
+
+    /* LEVEL GRID → 3 COL OK BUT TIGHT */
+    .grid.grid-cols-3 {
+        grid-template-columns: repeat(3, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    /* CATEGORY GRID → 2 COL */
+    .grid.grid-cols-2 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    iframe {
+        height: 320px !important;
+    }
+
+    #criteria-section {
+        padding: 40px !important;
+    }
+}
+
+/* Safety overflow fix */
+img, iframe {
+    max-width: 100%;
+}
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden">
@@ -90,8 +218,23 @@
             <h3 class="text-[11px] font-black uppercase tracking-widest mb-4 flex items-center gap-2">
                 <i data-lucide="file-text" class="w-4 h-4 text-saffron"></i> Current Document
             </h3>
-            <div class="rounded-2xl border-2 border-navy overflow-hidden bg-gray-200 aspect-[3/4] neo-shadow relative mb-8">
+            <!-- DESKTOP / TABLET PDF VIEW -->
+            <div class="hidden sm:block rounded-2xl border-2 border-navy overflow-hidden bg-gray-200 aspect-[3/4] neo-shadow relative mb-8">
                 <iframe th:src="${filePath}" class="w-full h-full"></iframe>
+            </div>
+
+            <!-- MOBILE PDF ACTION BUTTON -->
+            <div class="sm:hidden mb-8">
+                <a th:href="${filePath}" target="_blank"
+                   class="w-full flex items-center justify-center gap-3 bg-[#000080] text-white font-black py-4 rounded-2xl border-2 border-black neo-shadow">
+
+                    <i data-lucide="external-link" class="w-5 h-5"></i>
+                    Open PDF Full Screen
+                </a>
+
+                <p class="text-[10px] text-gray-400 mt-2 text-center font-bold">
+                    PDF opens in a separate viewer for better mobile experience
+                </p>
             </div>
 
             <!-- Study Tools -->

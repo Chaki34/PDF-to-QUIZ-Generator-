@@ -23,6 +23,6 @@ public class PdfFileService {
     }
 
     public List<PdfFile> getUserFiles(Long userId) {
-        return repository.findByUserId(userId);
+        return repository.findByUser_Id(userId);
     }
 }
